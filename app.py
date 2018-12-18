@@ -99,6 +99,7 @@ def handleMessage(psid, msg) :
         elif "buy" in msg["text"] : 
             print("found buy")
             resp = getBuyButtonRespFromList(12)
+            print(resp)
             callSendAPI(psid, resp)
         else :
             resp["text"] = "You sent " + msg["text"]
