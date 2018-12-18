@@ -54,46 +54,46 @@ def verify_facebook():
                 psid = event["sender"]["id"]
                 print("Sender ID " + psid)
 
-                if event["message"] : 
+                if event.message : 
                     handleMessage(psid,event["message"] )
                     #Handle messages
 
-                elif event["postback"] : 
+                elif event.postback : 
                     #Handle Postbacks 
                     pass
                 return "Entry Rec",200
     else : 
         return "error",404
 
-@app.route("/webhook", methods= ["POST", "GET"])
-def webhook() : 
-    if request.method == "POST" : 
-        body = request.json
-        if body["object"] == "page" : 
-            print(1)
-            for entry in body["entry"] :
-                event = entry["messaging"][0]
-                print(event)
+# @app.route("/webhook", methods= ["POST", "GET"])
+# def webhook() : 
+#     if request.method == "POST" : 
+#         body = request.json
+#         if body["object"] == "page" : 
+#             print(1)
+#             for entry in body["entry"] :
+#                 event = entry["messaging"][0]
+#                 print(event)
 
-                #Getting the sender PSID
-                psid = event["sender"]["id"]
-                print("Sender ID " + psid)
+#                 #Getting the sender PSID
+#                 psid = event["sender"]["id"]
+#                 print("Sender ID " + psid)
 
-                if event["message"] : 
-                    handleMessage(psid,event["message"] )
-                    #Handle messages
+#                 if event["message"] : 
+#                     handleMessage(psid,event["message"] )
+#                     #Handle messages
 
-                elif event["postback"] : 
-                    #Handle Postbacks 
-                    pass
-                return "Entry Rec",200
-        else : 
-            return "error",404
+#                 elif event["postback"] : 
+#                     #Handle Postbacks 
+#                     pass
+#                 return "Entry Rec",200
+#         else : 
+#             return "error",404
 
 
 def handleMessage(psid, msg) : 
     resp = {}
-    if msg["text"] : 
+    if msg.text : 
         resp["text"] = "You sent " + msg["text"]
 
     callSendAPI(psid,resp)
