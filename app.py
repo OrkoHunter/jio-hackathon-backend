@@ -196,5 +196,6 @@ def callSendAPI(psid, resp) :
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages",
                       params=params, headers=headers, data=data)
+    print(r)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
