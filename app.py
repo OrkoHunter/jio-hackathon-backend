@@ -144,7 +144,7 @@ def getBuyButtonRespFromList(data) :
     }
   }
 
-  return resp
+    return resp
 
 
 def getRegistrationDict() :
