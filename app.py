@@ -43,6 +43,11 @@ def webhook() :
             print(1)
             for entry in body["entry"] :
                 event = entry["messaging"][0]
+                print(event)
+
+                senderId = event["sender"]["id"]
+                print("Sender ID " + senderId)
+                
                 return "Entry Rec",200
         else : 
             return "error",404
