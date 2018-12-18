@@ -132,10 +132,6 @@ def getRegistrationDict() :
 
     return resp
 
-
-
-def sendButtonTemplate(buttonList) : 
-
 def handlePostback(psid, postBack) :
     pass
 
