@@ -99,7 +99,7 @@ def handleMessage(psid, msg) :
 def handlePostback(psid, postBack) :
     pass
 
-def callSendAPI(psdi, resp) : 
+def callSendAPI(psid, resp) : 
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
