@@ -51,12 +51,46 @@ def webhook() :
                 event = entry["messaging"][0]
                 print(event)
 
-                senderId = event["sender"]["id"]
-                print("Sender ID " + senderId)
-                
+                #Getting the sender PSID
+                psid = event["sender"]["id"]
+                print("Sender ID " + psid)
+
+                if event["message"] : 
+                    handleMessage(psid,event["message"] )
+                    #Handle messages
+
+                elif event["postback"] : 
+                    #Handle Postbacks 
+                    pass
                 return "Entry Rec",200
         else : 
             return "error",404
 
+
+def handleMessage(psid, msg) : 
+    resp = {}
+    if msg["text"] : 
+        resp["text"] = "You sent " + msg["text"]
+
+    callSendAPI(psid,resp)
+def handlePostback(psid, postBack) :
+    pass
+
+def callSendAPI(psdi, resp) : 
+
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps({
+        "recipient": {
+            "id": psid
+        },
+        "message": resp
+    })
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+                      params=params, headers=headers, data=data)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
