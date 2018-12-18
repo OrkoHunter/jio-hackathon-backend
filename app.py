@@ -41,6 +41,28 @@ def verify_facebook():
         # Verify
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             return challenge
+    if request.method == "POST" : 
+    body = request.json
+    if body["object"] == "page" : 
+        print(1)
+        for entry in body["entry"] :
+            event = entry["messaging"][0]
+            print(event)
+
+            #Getting the sender PSID
+            psid = event["sender"]["id"]
+            print("Sender ID " + psid)
+
+            if event["message"] : 
+                handleMessage(psid,event["message"] )
+                #Handle messages
+
+            elif event["postback"] : 
+                #Handle Postbacks 
+                pass
+            return "Entry Rec",200
+    else : 
+        return "error",404
 
 @app.route("/webhook", methods= ["POST", "GET"])
 def webhook() : 
