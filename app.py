@@ -54,11 +54,11 @@ def verify_facebook():
                 psid = event["sender"]["id"]
                 print("Sender ID " + psid)
 
-                if event.message : 
+                if "message" in event.keys() : 
                     handleMessage(psid,event["message"] )
                     #Handle messages
 
-                elif event.postback : 
+                elif "postback" in event.keys() : 
                     #Handle Postbacks 
                     pass
                 return "Entry Rec",200
@@ -93,7 +93,7 @@ def verify_facebook():
 
 def handleMessage(psid, msg) : 
     resp = {}
-    if msg.text : 
+    if "text" in msg.keys() : 
         resp["text"] = "You sent " + msg["text"]
 
     callSendAPI(psid,resp)
