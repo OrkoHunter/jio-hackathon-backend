@@ -120,7 +120,7 @@ def getBuyButtonRespFromList(data) :
         "buttons":[
           {
             "type":"payment",
-            "title":"But Button",
+       
             "payload":"DEVELOPER_DEFINED_PAYLOAD",
             "payment_summary":{
               "currency":"USD",
