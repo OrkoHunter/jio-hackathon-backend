@@ -24,7 +24,17 @@ def main():
 
 @app.route("/verify_facebook")
 def verify_facebook():
-    return "12345533"
+    VERIFY_TOKEN = "1234553asdcds3"
+
+    mode = request.args.get("hub.mode")
+    token = request.args.get("hub.token")
+    challenge = request.args.get("hub.challenge")
+
+    if mode and token:
+        # Verify
+        if mode == 'subscribe' and token == VERIFY_TOKEN:
+            return challenge
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
