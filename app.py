@@ -93,6 +93,9 @@ def verify_facebook():
 def handleMessage(psid, msg) : 
     resp = {}
     if "text" in msg.keys() : 
+        if "registration" in msg["text"] : 
+            resp = getRegistrationDict()
+            callSendAPI(psid, resp)
         resp["text"] = "You sent " + msg["text"]
 
     elif msg.get("attachments") : 
@@ -100,6 +103,39 @@ def handleMessage(psid, msg) :
         print("attachmentUrl")
         resp["text"] = attachmentUrl
     callSendAPI(psid,resp)
+
+def getRegistrationDict() :
+    resp = "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"button",
+        "text":"What do you want to do next?",
+        "buttons":[
+          {
+            "type":"postback",
+            "payload":"user_name",
+            "title":"Name"
+          },
+          {
+            "type":"postback",
+            "payload":"address",
+            "title":"Address"
+          },
+          {
+            "type":"postback",
+            "payload":"phone",
+            "title":"Phone number"
+          }
+        ]
+      }
+    }
+
+    return resp
+
+
+
+def sendButtonTemplate(buttonList) : 
+
 def handlePostback(psid, postBack) :
     pass
 
