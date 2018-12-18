@@ -35,7 +35,7 @@ def verify_facebook():
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             return challenge
 
-@app.route("/webhook", methods= ["POST"])
+@app.route("/webhook", methods= ["POST", "GET"])
 def webhook() : 
     if request.method == "POST" : 
         body = request.json
