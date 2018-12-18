@@ -123,7 +123,7 @@ def getBuyButtonRespFromList(data) :
             "payment_summary":{
               "currency":"USD",
               "payment_type":"FIXED_AMOUNT",
-              "is_test_payment" : true, 
+              "is_test_payment" : True, 
               "merchant_name":"My Fake Business",
               "requested_user_info":[
                 "shipping_address",
