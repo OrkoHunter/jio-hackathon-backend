@@ -29,7 +29,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 def main():
     return "Hello"
 
-@app.route("/verify_facebook")
+@app.route("/verify_facebook", methods=["POST", "GET"])
 def verify_facebook():
     VERIFY_TOKEN = "1234553asdcds3"
 
