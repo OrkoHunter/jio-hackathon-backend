@@ -91,12 +91,13 @@ def verify_facebook():
 
 
 def handleMessage(psid, msg) : 
-    resp = {}
+    # resp = {}
     if "text" in msg.keys() : 
         if "registration" in msg["text"] : 
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
         elif "buy" in msg["text"] : 
+            print("found buy")
             resp = getBuyButtonRespFromList(12)
             callSendAPI(psid, resp)
         else :
@@ -106,7 +107,7 @@ def handleMessage(psid, msg) :
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
         print("attachmentUrl")
         resp["text"] = attachmentUrl
-    callSendAPI(psid,resp)
+    # callSendAPI(psid,resp)
 
 
 def getBuyButtonRespFromList(data) : 
