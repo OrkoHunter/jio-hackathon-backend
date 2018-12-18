@@ -1,10 +1,8 @@
 from sqlalchemy import Table, Column, Integer, ForeignKey, String, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
 
 Base = declarative_base()
-engine = create_engine('mysql://fykfncuva5c32yws:y4581v48wq0jchft@ou6zjjcqbi307lip.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/qunovkvl5ol8c6pu', echo=True)
 
 class User(Base):
     __tablename__ = 'user'

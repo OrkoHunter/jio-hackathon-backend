@@ -2,8 +2,12 @@
 import os
 import sys
 
+import tables
+
 from flask import Flask, render_template, redirect, request
-from flask_session import Session
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 """
 Fetch static data
@@ -11,9 +15,11 @@ Fetch static data
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
+engine = create_engine('mysql://fykfncuva5c32yws:y4581v48wq0jchft@ou6zjjcqbi307lip.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/qunovkvl5ol8c6pu', echo=True)
+
 
 app = Flask(__name__, static_url_path='/static')
-sess = Session()
+
 app.config['SESSION_TYPE'] = 'filesystem'
 # sess.init_app(app)
 
