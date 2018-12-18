@@ -144,6 +144,8 @@ def getBuyButtonRespFromList(data) :
     }
   }
 
+  return resp
+
 
 def getRegistrationDict() :
     resp = {"attachment":{
