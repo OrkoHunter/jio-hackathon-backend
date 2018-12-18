@@ -37,15 +37,20 @@ def verify_facebook():
 
 @app.route("/webhook", methods= ["POST"])
 def webhook() : 
-    body = request.args
-    print(body)
+    if request.method == "POST" : 
+        body = request.json
+        if body["object"] == "page" : 
+            print(1)
+            for entry in body["entry"] :
+                event = entry["messaging"][0]
+                print(event)
 
-    if body["object"] == "page" : 
-        for entry in body["entry"] : 
-            event = entry["messaging"][0]
-            return "Entry Rec", 200
-    else : 
-        return "", 404
+                senderId = event["sender"]["id"]
+                print("Sender ID " + senderId)
+                
+                return "Entry Rec",200
+        else : 
+            return "error",404
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
