@@ -91,7 +91,7 @@ def verify_facebook():
 
 
 def handleMessage(psid, msg) : 
-    # resp = {}
+    resp = {}
     if "text" in msg.keys() : 
         if "registration" in msg["text"] : 
             resp = getRegistrationDict()
