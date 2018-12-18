@@ -35,6 +35,17 @@ def verify_facebook():
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             return challenge
 
+@app.route("/webhook", methods= ["POST"])
+def webhook() : 
+    body = request.args
+    print(body)
+
+    if body["object"] == "page" : 
+        for entry in body["entry"] : 
+            event = entry["messaging"][0]
+            return "Entry Rec", 200
+    else : 
+        return "", 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
