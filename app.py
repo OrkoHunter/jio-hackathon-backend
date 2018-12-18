@@ -16,12 +16,13 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 engine = create_engine('mysql://fykfncuva5c32yws:y4581v48wq0jchft@ou6zjjcqbi307lip.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/qunovkvl5ol8c6pu', echo=True)
-
+Session = sessionmaker(bind=engine)
+# Session.configure(bind=engine)
+session = Session()
 
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SESSION_TYPE'] = 'filesystem'
-# sess.init_app(app)
 
 # Valid routes
 @app.route("/")
