@@ -105,7 +105,7 @@ def handleMessage(psid, msg) :
     callSendAPI(psid,resp)
 
 def getRegistrationDict() :
-    resp = "attachment":{
+    resp = {"attachment":{
       "type":"template",
       "payload":{
         "template_type":"button",
@@ -128,7 +128,7 @@ def getRegistrationDict() :
           }
         ]
       }
-    }
+    }}
 
     return resp
 
