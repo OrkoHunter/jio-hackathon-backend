@@ -15,7 +15,7 @@ class User(Base):
     user_stock = relationship("stock")
     
     def __repr__(self):
-        return f"<User(name={user_name}, user_id={user_id},address={address},phone={phone},stock={user_stock})>"
+        return "<User(name={}, user_id={},address={},phone={},stock={})>".format(user_name,user_id,address,phone,user_stock)
 
 class Stock(Base):
     __tablename__ = 'stock'
@@ -26,4 +26,4 @@ class Stock(Base):
     minimum_item = Column(Integer)
 
     def __repr__(self):
-        return f"<User(id={prod_id}, unit_type={unit_type},available_item={available_item},price_per_unit={price_per_unit},min_item={minimum_item})>"
+        return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(prod_id,unit_type,available_item,price_per_unit,minimum_item)
