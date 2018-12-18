@@ -22,6 +22,9 @@ app.config['SESSION_TYPE'] = 'filesystem'
 def main():
     return "Hello"
 
+@app.route("/verify_facebook")
+def verify_facebook():
+    return "Z]3DJH7U3g7WJs>u>qzP$9uX2UqFs&(E"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
