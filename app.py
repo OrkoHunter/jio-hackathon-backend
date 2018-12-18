@@ -26,7 +26,9 @@ def define_routes(app):
     # Valid routes
     @app.route("/")
     def main():
-        return render_template('index.html')
+        return "Hello"
+
+
 
 
 if __name__ == '__main__':
