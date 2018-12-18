@@ -45,7 +45,6 @@ def verify_facebook():
     if request.method == "POST" : 
         body = request.json
         if body["object"] == "page" : 
-            print(1)
             for entry in body["entry"] :
                 event = entry["messaging"][0]
                 print(event)
@@ -96,6 +95,10 @@ def handleMessage(psid, msg) :
     if "text" in msg.keys() : 
         resp["text"] = "You sent " + msg["text"]
 
+    elif msg.get("attachments") : 
+        attachmentUrl = msg["attachments"][0]["payload"]["url"]
+        print("attachmentUrl")
+        resp["text"] = attachmentUrl
     callSendAPI(psid,resp)
 def handlePostback(psid, postBack) :
     pass
