@@ -101,7 +101,13 @@ class Stock(db.Model):
     def __repr__(self):
         return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(self.prod_id,self.unit_type,self.available_item,self.price_per_unit,self.minimum_item)
 
+
 # db.create_all()
+# user1 = User(user_id=1,user_name="Ramu",address="Medinipur, West Bengal",phone="7897897897")
+# item1 = Stock(prod_id="1aa", unit_type="kg", available_item="200",price_per_unit="20",minimum_item="50",picture="https://cdn1.woolworths.media/content/wowproductimages/medium/144329.jpg",owner_id=1) 
+# db.session.add(user1)
+# db.session.add(item1)
+# db.session.commit()
 
 # Valid routes
 @app.route("/")
