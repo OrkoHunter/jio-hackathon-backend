@@ -20,8 +20,8 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 # Session = sessionmaker(bind=engine)
 # # Session.configure(bind=engine)
 # session = Session()
-SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
-SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item"]
+SELL_LIST = ["Product Name", "picture","available quantity (in KG)", "Rate(R.S.) per KG", "minimum order quantity you wish to receive"]
+SELL_IDS = ["prod_id", "picture", "available_item", "price_per_unit", "minimum_item"]
 
 def savePickle(index, flag ) :
   
@@ -171,17 +171,20 @@ def handleMessage(psid, msg) :
             addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
             globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
 
-            if globDict["SELL_INDEX"] > 3 : 
+            if globDict["SELL_INDEX"] > 4 : 
                 globDict["SELL_INDEX"] = 0
-                UpdateFromDict("sell", getSellValDict(), psid)
+                # UpdateFromDict("sell", getSellValDict(), psid)
                 print(getSellValDict())
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
-                print()
-            else : 
-                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
-        elif "registration" in msg["text"] : 
+            else : 
+                if SELL_IDS[globDict["SELL_INDEX"]] == "picture" : 
+                    callSendAPI(psid, {"text" : "Please send a picture of the harvest."})
+                else :
+                    callSendAPI(psid, {"text" : "Please tell the " + SELL_LIST[globDict["SELL_INDEX"]]})    
+
+        elif "registration" in msg["text"].lower() : 
             globDict["SELL_INDEX"] = 0
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
@@ -192,7 +195,7 @@ def handleMessage(psid, msg) :
         #     print(resp)
         #     callSendAPI(psid, resp)
 
-        elif "sell" in msg["text"] : 
+        elif "sell" in msg["text"].lower() : 
             print("in sell")
             globDict["SELL_FLAG"] = True
             globDict["SELL_INDEX"] = 0
@@ -200,7 +203,7 @@ def handleMessage(psid, msg) :
             savePickle(0, True)
             callSendAPI(psid, resp)
 
-        elif "fertilizer" in msg["text"] : 
+        elif "fertilizer" in msg["text"].lower() : 
             print("in fert")
             resp["text"] = "Please send your current location to know optimum fertilizer quantity"
             callSendAPI(psid, resp)
@@ -213,12 +216,18 @@ def handleMessage(psid, msg) :
         
     elif msg.get("attachments") : 
         if msg["attachments"][0]["type"] == "image" :
+            if globDict["SELL_FLAG"] : 
+                addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["attachments"][0]["payload"]["url"] )
+                globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
+                savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
+                callSendAPI(psid, {"text" : "Please tell the " + SELL_LIST[globDict["SELL_INDEX"]]}) 
+            else : 
             #Found the image now send it to API to get result  
-            attachmentUrl = msg["attachments"][0]["payload"]["url"]
-            callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
-            sending_sender_action(psid, 'typing_on')
-            #Send results 
-            sending_sender_action(psid, 'typing_off')
+                attachmentUrl = msg["attachments"][0]["payload"]["url"]
+                callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
+                sending_sender_action(psid, 'typing_on')
+                #Send results 
+                sending_sender_action(psid, 'typing_off')
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
@@ -336,10 +345,12 @@ def sending_sender_action(recipient_id, sender_action):
                       params=params, headers=headers, data=data)
 
 def addSellData(psid,key,val) : 
-    seller = db.session.query(User).get(psid)
-    stck = seller.user_stock
-    setattr(stck, key, val)
-    db.session.commit()
+    print(key)
+    print(val)
+    # seller = db.session.query(User).get(psid)
+    # stck = seller.user_stock
+    # setattr(stck, key, val)
+    # db.session.commit()
 
 def UpdateFromDict(table, values, user_id):
     if table=="user":
