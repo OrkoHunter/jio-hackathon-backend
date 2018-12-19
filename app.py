@@ -228,11 +228,40 @@ def handleMessage(psid, msg) :
             nit, phos = unnati.getData(msg["attachments"][0]["payload"]["coordinates"]["lat"], msg["attachments"][0]["payload"]["coordinates"]["long"])
             print(nit)
             print(phos)
+            callSendAPI(psid, {"text" : "Below are the recommended fertiliser dosages for nitrogen requirement."})
+            callSendAPI(psid, getFertiliserResponse(nit))
+            callSendAPI(psid, {"text" : "Below are the recommended fertiliser dosages for phosphorus requirement."})
+            callSendAPI(psid, getFertiliserResponse(phos))
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
+def getFertiliserResponse(data) : 
+    resp = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+            ]
+        }
+        }
+    }
 
+    for k,v in data.items():
+        item_to_sell =  {
+        "title":"k",
+        "subtitle":"{} KG/Ha".format(v),
+        "image_url":"http://i.imgur.com/BHlC0zj.jpg",
+        "buttons":[
+            {
+                "type":"web_url",
+                "url":"https://www.google.com/search?q=" + k,
+                "title":"More info"
+              }]      
+        }
+        resp["attachment"]["payload"]["elements"].append(item_to_sell)
+    return resp
 
 def getRegistrationDict() :
     resp = {"attachment":{
