@@ -134,8 +134,9 @@ def verify_facebook():
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             return challenge
     if request.method == "POST" : 
+        print("In heroku post ")
         globDict = getPickleDict()
-      
+        
         body = request.json
         if body["object"] == "page" : 
             for entry in body["entry"] :
@@ -144,6 +145,7 @@ def verify_facebook():
                     payload = postb["payload"]
                     print(payload)
                     return "ok", 200
+                print(event)
                 try : 
                     event = entry["messaging"][0]
                 except : 
