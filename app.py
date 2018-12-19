@@ -62,44 +62,44 @@ def getSellValDict():
     return unserialized_data    
 
 app = Flask(__name__, static_url_path='/static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
-app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+# db = SQLAlchemy(app)
+# app.config['SESSION_TYPE'] = 'filesystem'
 
 
-class User(db.Model):
-    __tablename__ = 'user'
-    user_id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String)
-    address = db.Column(db.String)
-    phone = db.Column(db.String)
-    user_stock = db.relationship("Stock")
+# class User(db.Model):
+#     __tablename__ = 'user'
+#     user_id = db.Column(db.Integer, primary_key=True)
+#     user_name = db.Column(db.String)
+#     address = db.Column(db.String)
+#     phone = db.Column(db.String)
+#     user_stock = db.relationship("Stock")
     
-    def __repr__(self):
-        return "<User(name={}, user_id={},address={},phone={},stock={})>".format(self.user_name,self.user_id,self.address,self.phone,self.user_stock)
+#     def __repr__(self):
+#         return "<User(name={}, user_id={},address={},phone={},stock={})>".format(self.user_name,self.user_id,self.address,self.phone,self.user_stock)
 
-class Buyer(db.Model):
-    __tablename__ = 'buyer'
-    user_id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String)
-    address = db.Column(db.String)
-    phone = db.Column(db.String)
+# class Buyer(db.Model):
+#     __tablename__ = 'buyer'
+#     user_id = db.Column(db.Integer, primary_key=True)
+#     user_name = db.Column(db.String)
+#     address = db.Column(db.String)
+#     phone = db.Column(db.String)
     
-    def __repr__(self):
-        return "<Buyer(name={}, user_id={},address={},phone={})>".format(self.user_name,self.user_id,self.address,self.phone)
+#     def __repr__(self):
+#         return "<Buyer(name={}, user_id={},address={},phone={})>".format(self.user_name,self.user_id,self.address,self.phone)
 
-class Stock(db.Model):
-    __tablename__ = 'stock'
-    prod_id = db.Column(db.String, primary_key=True)
-    unit_type = db.Column(db.String)
-    available_item = db.Column(db.Integer)
-    price_per_unit = db.Column(db.Float)
-    minimum_item = db.Column(db.Integer)
-    picture = db.Column(db.String)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+# class Stock(db.Model):
+#     __tablename__ = 'stock'
+#     prod_id = db.Column(db.String, primary_key=True)
+#     unit_type = db.Column(db.String)
+#     available_item = db.Column(db.Integer)
+#     price_per_unit = db.Column(db.Float)
+#     minimum_item = db.Column(db.Integer)
+#     picture = db.Column(db.String)
+#     owner_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
-    def __repr__(self):
-        return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(self.prod_id,self.unit_type,self.available_item,self.price_per_unit,self.minimum_item)
+#     def __repr__(self):
+#         return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(self.prod_id,self.unit_type,self.available_item,self.price_per_unit,self.minimum_item)
 
 
 # db.create_all()
