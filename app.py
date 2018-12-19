@@ -394,6 +394,80 @@ def ItemsList():
     
     return resp
 
+def getNews():
+    resp = {
+        "attachment": {
+        "type": "template",
+        "payload": {
+            "template_type": "list",
+            "top_element_style": "large",
+            "elements": [
+            {
+                "title": "Farm loan waivers: What does it mean for economy?",
+                "image_url": "https://www.livemint.com/rf/Image-621x414/LiveMint/Period2/2017/04/10/Photos/Processed/farmloans-kjuD--621x414@LiveMint.jpg",          
+                "buttons": [
+                {
+                    "title": "Read",
+                    "type": "web_url",
+                    "url": "http://economictimes.indiatimes.com/news/economy/agriculture//news/economy/agriculture/farm-loan-waivers-what-does-it-mean-for-economy/videoshow/67156150.cms",
+                    "messenger_extensions": true,
+                    "webview_height_ratio": "compact",            
+                }
+                ]
+            },
+            {
+                "title": "Agri schemes not disjointed but linked at various stages: Agri Min",
+                "image_url": "https://img.etimg.com/thumb/msid-67146006,width-300,imgsize-582300,resizemode-4/agriculture-afp.jpg",
+                "buttons": [
+                {
+                    "title": "Read",
+                    "type": "web_url",
+                    "url": "https://economictimes.indiatimes.com/news/economy/agriculture/agri-schemes-not-disjointed-but-linked-at-various-stages-agri-min/articleshow/67145806.cms",
+                    "messenger_extensions": true,
+                    "webview_height_ratio": "compact",            
+                }
+                ]
+            },
+            {
+                "title": "Madhya Pradesh to waive up to $5.3 billion in farm debts",
+                "image_url": "https://img.etimg.com/thumb/msid-67138922,width-300,imgsize-186074,resizemode-4/kamal-nath-pti.jpg",
+                "buttons": [
+                {
+                    "title": "Read",
+                    "type": "web_url",
+                    "url": "https://economictimes.indiatimes.com/news/economy/agriculture/madhya-pradesh-to-waive-up-to-5-3-billion-in-farm-debts/articleshow/67138942.cms",
+                    "messenger_extensions": true,
+                    "webview_height_ratio": "compact",            
+                }
+                ]
+            }
+            ,{
+                "title": "With eye on 2019, BJP government in Maharashtra woos onion growers",
+                "image_url": "https://img.etimg.com/thumb/msid-67113487,width-300,imgsize-383064,resizemode-4/onion-pti.jpg",
+                "buttons": [
+                {
+                    "title": "Read",
+                    "type": "web_url",
+                    "url": "https://economictimes.indiatimes.com/news/economy/agriculture/with-eye-on-2019-bjp-government-in-maharashtra-woos-onion-growers/articleshow/67113488.cms",
+                    "messenger_extensions": true,
+                    "webview_height_ratio": "compact",            
+                }
+                ]
+            }
+            
+            ],
+            "buttons": [
+            {
+                "title": "View More",
+                "type": "postback",
+                "payload": "payload"            
+            }
+            ]  
+        }
+        }
+    }
+    
+    return resp
 def get_user(sender_id):
     '''
     The user_details dictionary will have following keys
