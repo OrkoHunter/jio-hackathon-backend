@@ -108,7 +108,7 @@ class Stock(db.Model):
 # db.session.add(user1)
 # db.session.add(item1)
 # db.session.commit()
-# print(User.query.all())
+print(User.query.all())
 # Valid routes
 @app.route("/")
 def main():
