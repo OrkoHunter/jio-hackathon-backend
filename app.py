@@ -96,13 +96,58 @@ def handleMessage(psid, msg) :
         if "registration" in msg["text"] : 
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
-        resp["text"] = "You sent " + msg["text"]
+        elif "buy" in msg["text"] : 
+            print("found buy")
+            resp = getBuyButtonRespFromList(12)
+            print(resp)
+            callSendAPI(psid, resp)
+        else :
+            resp["text"] = "You sent " + msg["text"]
 
     elif msg.get("attachments") : 
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
         print("attachmentUrl")
         resp["text"] = attachmentUrl
-    callSendAPI(psid,resp)
+    # callSendAPI(psid,resp)
+
+
+def getBuyButtonRespFromList(data) : 
+    resp = { "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"button",
+        "text":"Try the buy button!",
+        "buttons":[
+          {
+            "type":"payment",
+            "title":"buy",
+            "payload":"DEVELOPER_DEFINED_PAYLOAD",
+            "payment_summary":{
+              "currency":"USD",
+              "payment_type":"FIXED_AMOUNT",
+              "is_test_payment" : True, 
+              "merchant_name":"My Fake Business",
+              "requested_user_info":[
+                "shipping_address",
+                "contact_name",
+                "contact_phone",
+                "contact_email"
+              ],
+              "price_list":[
+                {
+                  "label":"subtotal",
+                  "amount":"12.75"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+
+    return resp
+
 
 def getRegistrationDict() :
     resp = {"attachment":{
@@ -151,5 +196,7 @@ def callSendAPI(psid, resp) :
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages",
                       params=params, headers=headers, data=data)
+    print(r)
+    print(r.text)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
