@@ -461,7 +461,7 @@ def getNews():
                     "title": "Read",
                     "type": "web_url",
                     "url": "http://economictimes.indiatimes.com/news/economy/agriculture//news/economy/agriculture/farm-loan-waivers-what-does-it-mean-for-economy/videoshow/67156150.cms",
-                    "messenger_extensions": true,
+                    "messenger_extensions": True,
                     "webview_height_ratio": "compact",            
                 }
                 ]
@@ -474,7 +474,7 @@ def getNews():
                     "title": "Read",
                     "type": "web_url",
                     "url": "https://economictimes.indiatimes.com/news/economy/agriculture/agri-schemes-not-disjointed-but-linked-at-various-stages-agri-min/articleshow/67145806.cms",
-                    "messenger_extensions": true,
+                    "messenger_extensions": True,
                     "webview_height_ratio": "compact",            
                 }
                 ]
@@ -487,7 +487,7 @@ def getNews():
                     "title": "Read",
                     "type": "web_url",
                     "url": "https://economictimes.indiatimes.com/news/economy/agriculture/madhya-pradesh-to-waive-up-to-5-3-billion-in-farm-debts/articleshow/67138942.cms",
-                    "messenger_extensions": true,
+                    "messenger_extensions": True,
                     "webview_height_ratio": "compact",            
                 }
                 ]
@@ -500,7 +500,7 @@ def getNews():
                     "title": "Read",
                     "type": "web_url",
                     "url": "https://economictimes.indiatimes.com/news/economy/agriculture/with-eye-on-2019-bjp-government-in-maharashtra-woos-onion-growers/articleshow/67113488.cms",
-                    "messenger_extensions": true,
+                    "messenger_extensions": True,
                     "webview_height_ratio": "compact",            
                 }
                 ]
