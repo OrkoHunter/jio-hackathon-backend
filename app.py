@@ -173,11 +173,11 @@ def handleMessage(psid, msg) :
 
             if globDict["SELL_INDEX"] > 4 : 
                 globDict["SELL_INDEX"] = 0
-                UpdateFromDict("sell", getSellValDict(), psid)
+                # UpdateFromDict("sell", getSellValDict(), psid)
                 print(getSellValDict())
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
-                print()
+
             else : 
                 if SELL_IDS[globDict["SELL_INDEX"]] == "picture" : 
                     callSendAPI(psid, {"text" : "Please send a picture of the harvest."})
@@ -219,7 +219,8 @@ def handleMessage(psid, msg) :
             if globDict["SELL_FLAG"] : 
                 addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["attachments"][0]["payload"]["url"] )
                 globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
-                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]}) 
+                savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
+                callSendAPI(psid, {"text" : "Please tell the " + SELL_LIST[globDict["SELL_INDEX"]]}) 
             else : 
             #Found the image now send it to API to get result  
                 attachmentUrl = msg["attachments"][0]["payload"]["url"]
