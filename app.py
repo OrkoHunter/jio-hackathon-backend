@@ -116,42 +116,6 @@ def handleMessage(psid, msg) :
     # callSendAPI(psid,resp)
 
 
-def getBuyButtonRespFromList(data) : 
-    resp = { "attachment":{
-      "type":"template",
-      "payload":{
-        "template_type":"generic",
-        "elements" : [{"title" : "Tit", }]        "buttons":[
-          {
-            "type":"payment",
-            "title":"buy",
-            "payload":"DEVELOPER_DEFINED_PAYLOAD",
-            "payment_summary":{
-              "currency":"USD",
-              "payment_type":"FIXED_AMOUNT",
-              
-              "merchant_name":"My Fake Business",
-              "requested_user_info":[
-                "shipping_address",
-                "contact_name",
-                "contact_phone",
-                "contact_email"
-              ],
-              "price_list":[
-                {
-                  "label":"subtotal",
-                  "amount":"12.75"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-
-    return resp
-
 
 def getRegistrationDict() :
     resp = {"attachment":{
