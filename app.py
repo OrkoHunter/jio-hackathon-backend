@@ -118,7 +118,7 @@ def handleMessage(psid, msg) :
     if "text" in msg.keys() : 
         
         if globDict["SELL_FLAG"] : 
-            SELL_VAL_DICT[SELL_IDS[globDict["SELL_INDEX"]]] = msg["text"]
+            updateSELLVALPick({SELL_IDS[globDict["SELL_INDEX"]] : msg["text"]})
             globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
 
             if globDict["SELL_INDEX"] > 3 : 
