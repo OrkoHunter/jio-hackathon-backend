@@ -462,7 +462,7 @@ def getNews():
                 {
                     "title": "Read",
                     "type": "web_url",
-                    "url": "http://economictimes.indiatimes.com/news/economy/agriculture//news/economy/agriculture/farm-loan-waivers-what-does-it-mean-for-economy/videoshow/67156150.cms",
+                    "url": "https://economictimes.indiatimes.com/news/economy/agriculture//news/economy/agriculture/farm-loan-waivers-what-does-it-mean-for-economy/videoshow/67156150.cms",
                     "messenger_extensions": True,
                     "webview_height_ratio": "compact",            
                 }
