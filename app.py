@@ -168,5 +168,14 @@ def callSendAPI(psid, resp) :
                       params=params, headers=headers, data=data)
     print(r)
     print(r.text)
+
+def UpdateFromDict(table, values, user_id):
+    if table=="user":
+        seller = session.query(User).get(user_id)
+        unit = tables.Stock(**values)
+        seller.user_stock.append(unit)
+
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
