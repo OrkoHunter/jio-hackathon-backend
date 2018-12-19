@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-
+import unnati
 import tables
 import json
 from flask import Flask, render_template, redirect, request
@@ -193,6 +193,11 @@ def handleMessage(psid, msg) :
             resp["text"] = "Please tell the {}".format(SELL_LIST[0])
             savePickle(0, True)
             callSendAPI(psid, resp)
+
+        elif "fertilizer" in msg["text"] : 
+            print("in fert")
+            resp["text"] = "Please send your current location to know optimum fertilizer quantity"
+            callSendAPI(psid, resp)
         else :
             globDict["SELL_INDEX"] = 0
             resp["text"] = "You sent " + msg["text"]
@@ -211,6 +216,12 @@ def handleMessage(psid, msg) :
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
+
+        elif msg["attachments"][0]["type"] == "location" :
+            callSendAPI(psid, {"text" : "Thank you for sharing your location. "})
+            nit, phos = unnati.getData(msg["attachments"][0]["payload"]["coordinates"]["lat"], msg["attachments"][0]["payload"]["coordinates"]["long"])
+            print(nit)
+            print(phos)
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
