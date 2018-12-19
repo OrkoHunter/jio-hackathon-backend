@@ -145,6 +145,7 @@ def verify_facebook():
 
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
+                print(get_user(psid))
                 print("Sender ID " + psid)
                 print("Sell Index is " + str(globDict["SELL_INDEX"]))
                 print("Sell Flag is " + str(globDict["SELL_FLAG"]))
@@ -392,6 +393,19 @@ def ItemsList():
             resp["attachment"]["payload"]["elements"].append(item_to_sell)
     
     return resp
+
+def get_user(sender_id):
+    '''
+    The user_details dictionary will have following keys
+    first_name : First name of user
+    last_name : Last name of user
+    profile_pic : Profile picture of user
+    locale : Locale of the user on Facebook
+    '''
+    base_url = "https://graph.facebook.com/v2.6/{}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token={}".format(
+        sender_id, os.environ["PAGE_ACCESS_TOKEN"])
+    user_details = requests.get(base_url).json()
+    return user_details
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
     
