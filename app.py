@@ -161,7 +161,7 @@ def handleMessage(psid, msg) :
         if msg["attachments"][0]["type"] == "image" :
             #Found the image now send it to API to get result  
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
-            callSendAPI({"text" : "Got your image. Please wait till I process it."})
+            callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
             sending_sender_action(psid, 'typing_on')
         print("attachmentUrl")
         resp["text"] = attachmentUrl
