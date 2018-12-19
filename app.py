@@ -78,7 +78,8 @@ def verify_facebook():
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             return challenge
     if request.method == "POST" : 
-        global SELL_INDEX, SELL_FLAG
+        globDict = getPickleDict()
+      
         body = request.json
         if body["object"] == "page" : 
             for entry in body["entry"] :
@@ -88,8 +89,8 @@ def verify_facebook():
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
                 print("Sender ID " + psid)
-                print("Sell Index is " + str(SELL_INDEX))
-                print("Sell Flag is " + str(SELL_FLAG))
+                print("Sell Index is " + str(globDict["SELL_INDEX"]))
+                print("Sell Flag is " + str(globDict["SELL_FLAG"]))
                 if psid == "1013601592174583" : 
                     return "Entry Rec",200
                 if "message" in event.keys() : 
