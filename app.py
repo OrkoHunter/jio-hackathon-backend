@@ -93,7 +93,10 @@ def verify_facebook():
                     payload = postb["payload"]
                     print(payload)
                     return "ok", 200
-                event = entry["messaging"][0]
+                try : 
+                    event = entry["messaging"][0]
+                except : 
+                    return "", 404
                 print(event)
 
                 #Getting the sender PSID
