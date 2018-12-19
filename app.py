@@ -21,6 +21,16 @@ Session = sessionmaker(bind=engine)
 # Session.configure(bind=engine)
 session = Session()
 
+SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
+SELL_IDS = ["pname", "availQuant", "rate", "minQuant"]
+SELL_INDEX = 0
+SELL_FLAG = False
+
+
+SELL_VAL_DICT = {
+    
+}
+
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -64,45 +74,40 @@ def verify_facebook():
     else : 
         return "error",404
 
-# @app.route("/webhook", methods= ["POST", "GET"])
-# def webhook() : 
-#     if request.method == "POST" : 
-#         body = request.json
-#         if body["object"] == "page" : 
-#             print(1)
-#             for entry in body["entry"] :
-#                 event = entry["messaging"][0]
-#                 print(event)
-
-#                 #Getting the sender PSID
-#                 psid = event["sender"]["id"]
-#                 print("Sender ID " + psid)
-
-#                 if event["message"] : 
-#                     handleMessage(psid,event["message"] )
-#                     #Handle messages
-
-#                 elif event["postback"] : 
-#                     #Handle Postbacks 
-#                     pass
-#                 return "Entry Rec",200
-#         else : 
-#             return "error",404
-
 
 def handleMessage(psid, msg) : 
+    global SELL_FLAG, SELL_INDEX, SELL_LIST, SELL_IDS, SELL_VAL_DICT
     resp = {}
     if "text" in msg.keys() : 
-        if "registration" in msg["text"] : 
+
+        if SELL_FLAG : 
+            if SELL_INDEX > 3 : 
+                SELL_INDEX = 0
+                UpdateFromDict("sell", SELL_VAL_DICT, psid)
+                SELL_VAL_DICT = {}
+            else : 
+                SELL_VAL_DICT[SELL_IDS[SELL_INDEX]] = msg["text"]
+                SELL_INDEX +=1
+                callSendAPI(psid, {"text" : SELL_LIST[SELL_INDEX]})    
+            
+
+        elif "registration" in msg["text"] : 
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
-        elif "buy" in msg["text"] : 
-            print("found buy")
-            resp = getBuyButtonRespFromList(12)
-            print(resp)
+        # elif "buy" in msg["text"] : 
+        #     print("found buy")
+        #     resp = getBuyButtonRespFromList(12)
+        #     print(resp)
+        #     callSendAPI(psid, resp)
+
+        elif "sell" in msg["text"] : 
+            print("in sell")
+            SELL_FLAG = True
+            resp["text"] = "Please tell the {}".format(SELL_LIST[0])
             callSendAPI(psid, resp)
         else :
             resp["text"] = "You sent " + msg["text"]
+            callSendAPI(psid, resp)
 
     elif msg.get("attachments") : 
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
@@ -110,43 +115,6 @@ def handleMessage(psid, msg) :
         resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
-
-def getBuyButtonRespFromList(data) : 
-    resp = { "attachment":{
-      "type":"template",
-      "payload":{
-        "template_type":"button",
-        "text":"Try the buy button!",
-        "buttons":[
-          {
-            "type":"payment",
-            "title":"buy",
-            "payload":"DEVELOPER_DEFINED_PAYLOAD",
-            "payment_summary":{
-              "currency":"USD",
-              "payment_type":"FIXED_AMOUNT",
-              "is_test_payment" : True, 
-              "merchant_name":"My Fake Business",
-              "requested_user_info":[
-                "shipping_address",
-                "contact_name",
-                "contact_phone",
-                "contact_email"
-              ],
-              "price_list":[
-                {
-                  "label":"subtotal",
-                  "amount":"12.75"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-
-    return resp
 
 
 def getRegistrationDict() :
