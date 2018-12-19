@@ -33,6 +33,8 @@ def savePickle(index=0, flag = False ) :
     with open('asd.pickle', 'wb') as handle:
         pickle.dump(d, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+savePickle()
+
 def getPickleDict() : 
     with open('asd.pickle', 'rb') as handle:
         unserialized_data = pickle.load(handle)
@@ -215,4 +217,4 @@ def UpdateFromDict(table, values, user_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-    savePickle()
+    
