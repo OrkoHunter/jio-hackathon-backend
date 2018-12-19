@@ -22,45 +22,45 @@ Session = sessionmaker(bind=engine)
 # Session.configure(bind=engine)
 session = Session()
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
-SELL_IDS = ["pname", "availQuant", "rate", "minQuant"],
+SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item"]
 
 def savePickle(index, flag ) :
-    print("Updating pickle index {} and flag {}".format(index, flag))
+  
     d= {
     "SELL_INDEX" : index,
     "SELL_FLAG" : flag
     }
+
     # Store data (serialize)
     with open('asd.pickle', 'wb') as handle:
         pickle.dump(d, handle)
 
+    with open('sellDict.pickle', 'wb') as handle:
+        pickle.dump({}, handle)
 savePickle(0, False)
 
 def getPickleDict() : 
     with open('asd.pickle', 'rb') as handle:
         unserialized_data = pickle.load(handle)
-        print("Unser Data")
-        print(unserialized_data)
     return unserialized_data
 
 def updateSELLVALPick(d) : 
-    x= None
-    try : 
-        with open('sellDict.pickle', 'rb') as handle:
-            data = pickle.load(handle)
-            for k,v in d.items() : 
-                data[k] = v 
-                x= data
-    except : 
-        x =d
+    print("Dict to add")
+    print(d)
+    with open('sellDict.pickle', 'rb') as handle:
+        data = pickle.load(handle)
+        print("init dict")
+        print(data)
+        for k,v in d.items() : 
+            data[k] = v 
+    print("Final Dict")
+    print(data)
     with open('sellDict.pickle', 'wb') as handle:
-        pickle.dump(x, handle)
-
-
-SELL_VAL_DICT = {
-    
-}
-
+        pickle.dump(data, handle)
+def getSellValDict():
+    with open('sellDict.pickle', 'rb') as handle:
+        unserialized_data = pickle.load(handle)
+    return unserialized_data    
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -111,21 +111,24 @@ def verify_facebook():
 
 
 def handleMessage(psid, msg) : 
-    global SELL_FLAG, SELL_INDEX, SELL_LIST, SELL_IDS, SELL_VAL_DICT
+    global  SELL_INDEX, SELL_LIST, SELL_IDS
+    SELL_VAL_DICT = {}
     globDict = getPickleDict()
     resp = {}
     if "text" in msg.keys() : 
         
         if globDict["SELL_FLAG"] : 
-            SELL_VAL_DICT[SELL_IDS[globDict["SELL_INDEX"]]] = msg["text"]
-            globDict["SELL_INDEX"] +=1
+            # updateSELLVALPick({SELL_IDS[globDict["SELL_INDEX"]] : msg["text"]})
+            addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
+            globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
 
             if globDict["SELL_INDEX"] > 3 : 
                 globDict["SELL_INDEX"] = 0
-                UpdateFromDict("sell", SELL_VAL_DICT, psid)
-                SELL_VAL_DICT = {}
+                UpdateFromDict("sell", getSellValDict(), psid)
+                print(getSellValDict())
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
+                print()
             else : 
                 callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
@@ -146,17 +149,14 @@ def handleMessage(psid, msg) :
             globDict["SELL_INDEX"] = 0
             resp["text"] = "Please tell the {}".format(SELL_LIST[0])
             savePickle(0, True)
-            newD  = getPickleDict()
-            print(newD)
             callSendAPI(psid, resp)
         else :
             globDict["SELL_INDEX"] = 0
             resp["text"] = "You sent " + msg["text"]
             callSendAPI(psid, resp)
-        print("Outside all if")
+        
         savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
-        newD  = getPickleDict()
-        print(newD)
+        
     elif msg.get("attachments") : 
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
         print("attachmentUrl")
@@ -214,6 +214,13 @@ def callSendAPI(psid, resp) :
                       params=params, headers=headers, data=data)
     print(r)
     print(r.text)
+
+
+def addSellData(psid,key,val) : 
+    seller = session.query(User).get(user_id)
+    stck = seller.user_stock
+    setattr(stck, key, val)
+    session.commit()
 
 def UpdateFromDict(table, values, user_id):
     if table=="user":
