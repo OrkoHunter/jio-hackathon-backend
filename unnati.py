@@ -3,8 +3,13 @@
 import csv
 import math
 
+sand = 0
+clay = 0
+pH = 0
+carbon = 0
 
 def getData(lat, lon) : 
+    global sand,clay, pH, carbon
     original_lat = lat
     original_long = lon
 
