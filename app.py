@@ -25,7 +25,7 @@ SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum
 SELL_IDS = ["pname", "availQuant", "rate", "minQuant"]
 
 def savePickle(index, flag ) :
-    print("Updating pickle index {} and flag {}".format(index, flag))
+  
     d= {
     "SELL_INDEX" : index,
     "SELL_FLAG" : flag
@@ -39,8 +39,6 @@ savePickle(0, False)
 def getPickleDict() : 
     with open('asd.pickle', 'rb') as handle:
         unserialized_data = pickle.load(handle)
-        print("Unser Data")
-        print(unserialized_data)
     return unserialized_data
 
 def updateSELLVALPick(d) : 
@@ -56,6 +54,10 @@ def updateSELLVALPick(d) :
     with open('sellDict.pickle', 'wb') as handle:
         pickle.dump(x, handle)
 
+def getSellValDict():
+    with open('sellDict.pickle', 'rb') as handle:
+        unserialized_data = pickle.load(handle)
+    return unserialized_data    
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -118,10 +120,11 @@ def handleMessage(psid, msg) :
 
             if globDict["SELL_INDEX"] > 3 : 
                 globDict["SELL_INDEX"] = 0
-                UpdateFromDict("sell", SELL_VAL_DICT, psid)
-                SELL_VAL_DICT = {}
+                UpdateFromDict("sell", getSellValDict(), psid)
+                print(getSellValDict())
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
+                print()
             else : 
                 callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
@@ -142,17 +145,14 @@ def handleMessage(psid, msg) :
             globDict["SELL_INDEX"] = 0
             resp["text"] = "Please tell the {}".format(SELL_LIST[0])
             savePickle(0, True)
-            newD  = getPickleDict()
-            print(newD)
             callSendAPI(psid, resp)
         else :
             globDict["SELL_INDEX"] = 0
             resp["text"] = "You sent " + msg["text"]
             callSendAPI(psid, resp)
-        print("Outside all if")
+        
         savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
-        newD  = getPickleDict()
-        print(newD)
+        
     elif msg.get("attachments") : 
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
         print("attachmentUrl")
