@@ -229,14 +229,14 @@ def handleMessage(psid, msg) :
             print(nit)
             print(phos)
             callSendAPI(psid, {"text" : "Below are the recommended fertiliser dosages for nitrogen requirement."})
-            callSendAPI(psid, getFertiliserResponse(nit))
+            callSendAPI(psid, getFertiliserResponse(nit, "http://i.imgur.com/BHlC0zj.jpg"))
             callSendAPI(psid, {"text" : "Below are the recommended fertiliser dosages for phosphorus requirement."})
-            callSendAPI(psid, getFertiliserResponse(phos))
+            callSendAPI(psid, getFertiliserResponse(phos,"http://i.imgur.com/Ao1vPNe.jpg"))
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
-def getFertiliserResponse(data) : 
+def getFertiliserResponse(data,img) : 
     resp = {
     "attachment":{
       "type":"template",
@@ -250,9 +250,9 @@ def getFertiliserResponse(data) :
 
     for k,v in data.items():
         item_to_sell =  {
-        "title":"k",
+        "title":k,
         "subtitle":"{} KG/Ha".format(v),
-        "image_url":"http://i.imgur.com/BHlC0zj.jpg",
+        "image_url":img,
         "buttons":[
             {
                 "type":"web_url",
