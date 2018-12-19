@@ -27,8 +27,8 @@ SELL_IDS = ["pname", "availQuant", "rate", "minQuant"],
 def savePickle(index, flag ) :
     print("Updating pickle index {} and flag {}".format(index, flag))
     d= {
-    "SELL_INDEX" : 0,
-    "SELL_FLAG" : False
+    "SELL_INDEX" : index,
+    "SELL_FLAG" : flag
     }
     # Store data (serialize)
     with open('asd.pickle', 'wb') as handle:
