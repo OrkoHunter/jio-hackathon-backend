@@ -62,7 +62,7 @@ def getSellValDict():
     return unserialized_data    
 
 app = Flask(__name__, static_url_path='/static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 app.config['SESSION_TYPE'] = 'filesystem'
 
@@ -101,7 +101,7 @@ class Stock(db.Model):
     def __repr__(self):
         return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(self.prod_id,self.unit_type,self.available_item,self.price_per_unit,self.minimum_item)
 
-#run once
+
 db.create_all()
 user1 = User(user_id=1,user_name="Ramu",address="Medinipur, West Bengal",phone="7897897897")
 item1 = Stock(prod_id="1aa", unit_type="kg", available_item="200",price_per_unit="20",minimum_item="50",picture="https://cdn1.woolworths.media/content/wowproductimages/medium/144329.jpg",owner_id=1) 
@@ -212,13 +212,8 @@ def handleMessage(psid, msg) :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
             sending_sender_action(psid, 'typing_on')
-            #Send results 
-            sending_sender_action(psid, 'typing_off')
-        elif msg["attachments"][0]["type"] == "audio" :
-            attachmentUrl = msg["attachments"][0]["payload"]["url"]
-            callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
-        # print("attachmentUrl")
-        # resp["text"] = attachmentUrl
+        print("attachmentUrl")
+        resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
 
