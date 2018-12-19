@@ -1,0 +1,3 @@
+[submodule "disease-detection"]
+	path = disease-detection
+	url = https://github.com/athityakumar/disease-detection-backend
