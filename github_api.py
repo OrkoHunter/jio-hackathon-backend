@@ -15,6 +15,8 @@ def write_database(data):
     """Takes python dictionary
     Returns status code
     """
+    if data is None : 
+        return False
     options = {
         'files': {
             'database.json': {

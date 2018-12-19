@@ -152,7 +152,7 @@ def verify_facebook():
 
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
-                print(get_user(psid))
+                # print(get_user(psid))
                 print("Sender ID " + psid)
                 print("Sell Index is " + str(globDict["SELL_INDEX"]))
                 print("Sell Flag is " + str(globDict["SELL_FLAG"]))
@@ -184,6 +184,9 @@ def handleMessage(psid, msg) :
                 # UpdateFromDict("sell", getSellValDict(), psid)
                 print(getSellValDict())
                 globDict["SELL_FLAG"] =False
+                dataS = gist.read_database()
+                dataS["data"]["products"].append({})
+                gist.write_database(dataS)
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
 
             else : 
@@ -215,6 +218,9 @@ def handleMessage(psid, msg) :
 
             callSendAPI(psid, getNews())
 
+        elif "buy" in msg["text"].lower() : 
+            resp = getBuyResp()
+            callSendAPI(psid, getBuyResp())
         elif "fertilizer" in msg["text"].lower() : 
             print("in fert")
             resp["text"] = "Please send your current location to know optimum fertilizer quantity"
@@ -241,15 +247,16 @@ def handleMessage(psid, msg) :
                 #Send results 
                 # endpoint = "http://disection.herokuapp.com/disease_check"
                 # r = requests.post(endpoint, {"image_url": attachmentUrl})
-                # res = fetch_data_from_url(attachmentUrl)
-                # sending_sender_action(psid, 'typing_off')
+                res = fetch_data_from_url(attachmentUrl)
+                sending_sender_action(psid, 'typing_off')
                 # # print(r.content)
-                # callSendAPI(psid,getDiseaaseResponse(res) )
+                callSendAPI(psid,getDiseaaseResponse(res) )
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
 
         elif msg["attachments"][0]["type"] == "location" :
+            pass
             callSendAPI(psid, {"text" : "Thank you for sharing your location. "})
             nit, phos = unnati.getData(msg["attachments"][0]["payload"]["coordinates"]["lat"], msg["attachments"][0]["payload"]["coordinates"]["long"])
             sending_sender_action(psid, 'typing_on')
@@ -266,6 +273,37 @@ def handleMessage(psid, msg) :
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
+def getBuyResp() : 
+    d = gist.read_database()
+    prd = d["data"]["products"]
+     
+    resp = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+            ]
+        }
+        }
+    }
+    for i in prd :
+        item_to_sell =  {
+        "title":i["prodName"],
+        "subtitle":"Price per unit - {}\nAvailable Quantity - {} kg\nMinimum Order - {} kg".format(i["price_per_unit"], i["available_item"], i["minimum_item"]),
+        "image_url": i["picture"],
+        "buttons":[
+            {
+                "type":"web_url",
+                "url":"https://www.google.com/",
+                "title":"Buy Now"
+              }]      
+        }
+        resp["attachment"]["payload"]["elements"].append(item_to_sell)
+    return resp
+
+
+
 
 def fetch_data_from_url(sample_image_url)  : 
     endpoint = "http://disection.herokuapp.com/disease_check"
@@ -355,8 +393,7 @@ def getRegistrationDict() :
 
     return resp
 
-def handlePostback(psid, postBack) :
-    pass
+
 
 def callSendAPI(psid, resp) : 
     print(resp)
@@ -460,7 +497,7 @@ def getNews():
                 {
                     "title": "Read",
                     "type": "web_url",
-                    "url": "http://economictimes.indiatimes.com/news/economy/agriculture//news/economy/agriculture/farm-loan-waivers-what-does-it-mean-for-economy/videoshow/67156150.cms",
+                    "url": "https://economictimes.indiatimes.com/news/economy/agriculture//news/economy/agriculture/farm-loan-waivers-what-does-it-mean-for-economy/videoshow/67156150.cms",
                     "messenger_extensions": True,
                     "webview_height_ratio": "compact",            
                 }
