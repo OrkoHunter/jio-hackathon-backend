@@ -145,7 +145,7 @@ def verify_facebook():
                     payload = postb["payload"]
                     print(payload)
                     return "ok", 200
-                print(event)
+                
                 try : 
                     event = entry["messaging"][0]
                 except : 
