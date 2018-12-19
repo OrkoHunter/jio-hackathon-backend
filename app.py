@@ -9,7 +9,7 @@ import time
 import requests
 from flask_sqlalchemy import SQLAlchemy
 import pickle
-
+import github_api as gist
 """
 Fetch static data
 """
@@ -232,11 +232,12 @@ def handleMessage(psid, msg) :
                 callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
                 sending_sender_action(psid, 'typing_on')
                 #Send results 
-                endpoint = "http://disection.herokuapp.com/disease_check"
-                r = requests.post(endpoint, {"image_url": attachmentUrl})
+                # endpoint = "http://disection.herokuapp.com/disease_check"
+                # r = requests.post(endpoint, {"image_url": attachmentUrl})
+                res = fetch_data_from_url(attachmentUrl)
                 sending_sender_action(psid, 'typing_off')
                 # print(r.content)
-                callSendAPI(psid,getDiseaaseResponse(r.content) )
+                callSendAPI(psid,getDiseaaseResponse(res) )
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
@@ -259,7 +260,14 @@ def handleMessage(psid, msg) :
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
-def getDiseaaseResponse(data,img) : 
+def fetch_data_from_url(sample_image_url)  
+    endpoint = "http://disection.herokuapp.com/disease_check"
+    r = requests.post(endpoint, {"image_url": sample_image_url})
+    content = r.content
+    response = json.loads(str.encode("utf-8").strip())['data']
+    return(response)
+
+def getDiseaaseResponse(data) : 
     resp = {
     "attachment":{
       "type":"template",
@@ -380,8 +388,10 @@ def sending_sender_action(recipient_id, sender_action):
                       params=params, headers=headers, data=data)
 
 def addSellData(psid,key,val) : 
-    print(key)
-    print(val)
+    oldDict = gist.read_database()
+    oldDict["data"]["products"][-1][key] = val
+    oldDict["data"]["products"][-1]["by"] = psid
+    gist.write_database(oldDict)
     # seller = db.session.query(User).get(psid)
     # stck = seller.user_stock
     # setattr(stck, key, val)
