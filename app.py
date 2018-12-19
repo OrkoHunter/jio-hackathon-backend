@@ -204,6 +204,10 @@ def handleMessage(psid, msg) :
             savePickle(0, True)
             callSendAPI(psid, resp)
 
+        elif "news" in msg["text"].lower() : 
+
+            callSendAPI(psid, getNews())
+
         elif "fertilizer" in msg["text"].lower() : 
             print("in fert")
             resp["text"] = "Please send your current location to know optimum fertilizer quantity"
@@ -230,10 +234,9 @@ def handleMessage(psid, msg) :
                 #Send results 
                 endpoint = "http://disection.herokuapp.com/disease_check"
                 r = requests.post(endpoint, {"image_url": attachmentUrl})
-                
                 sending_sender_action(psid, 'typing_off')
-                print(r.content)
-                callSendAPI(psid,{"text" :r.content } )
+                # print(r.content)
+                callSendAPI(psid,getDiseaaseResponse(r.content) )
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
@@ -255,6 +258,32 @@ def handleMessage(psid, msg) :
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
+
+def getDiseaaseResponse(data,img) : 
+    resp = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+            ]
+        }
+        }
+    }
+    for d in data : 
+        item_to_sell =  {
+        "title":d["disease"],
+        "subtitle":"Probability : {} %".format(d["score"]),
+        "image_url":DISEASE_IMAGE[d["disease"]],
+        "buttons":[
+            {
+                "type":"web_url",
+                "url":"https://www.google.com/search?q=" + d["disease"],
+                "title":"More info"
+              }]      
+        }
+        resp["attachment"]["payload"]["elements"].append(item_to_sell)
+    return resp
 
 def getFertiliserResponse(data,img) : 
     resp = {
