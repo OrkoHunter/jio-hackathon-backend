@@ -20,8 +20,8 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 # Session = sessionmaker(bind=engine)
 # # Session.configure(bind=engine)
 # session = Session()
-SELL_LIST = ["Product Name", "picture","available quantity (in KG)", "Rate(R.S.) per KG", "minimum order quantity you wish to receive"]
-SELL_IDS = ["prod_id", "picture", "available_item", "price_per_unit", "minimum_item"]
+SELL_LIST = ["Product Name", "picture","available quantity (in KG)", "rate(R.S.) per KG", "minimum order quantity you wish to receive (in KG)"]
+SELL_IDS = ["prodName", "picture", "available_item", "price_per_unit", "minimum_item"]
 
 def savePickle(index, flag ) :
   
