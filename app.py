@@ -241,7 +241,7 @@ def handleMessage(psid, msg) :
                 #Send results 
                 # endpoint = "http://disection.herokuapp.com/disease_check"
                 # r = requests.post(endpoint, {"image_url": attachmentUrl})
-                res = fetch_data_from_url(attachmentUrl)
+                # res = fetch_data_from_url(attachmentUrl)
                 sending_sender_action(psid, 'typing_off')
                 # print(r.content)
                 callSendAPI(psid,getDiseaaseResponse(res) )
@@ -270,9 +270,9 @@ def handleMessage(psid, msg) :
 def fetch_data_from_url(sample_image_url)  : 
     endpoint = "http://disection.herokuapp.com/disease_check"
     r = requests.post(endpoint, {"image_url": sample_image_url})
-    content = r.content
-    response = json.loads(str.encode("utf-8").strip())['data']
-    return(response)
+    content = json.loads(r.content.decode("utf-8"))['data']
+    # response = json.loads(str.encode("utf-8").strip())['data']
+    return content
 
 def getDiseaaseResponse(data) : 
     resp = {
