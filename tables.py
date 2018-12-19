@@ -33,7 +33,6 @@ class Stock(Base):
     price_per_unit = Column(Float)
     minimum_item = Column(Integer)
     picture = Column(String)
-    index = Column(Integer)
 
     def __repr__(self):
         return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(prod_id,unit_type,available_item,price_per_unit,minimum_item)
