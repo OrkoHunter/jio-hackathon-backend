@@ -241,10 +241,10 @@ def handleMessage(psid, msg) :
                 #Send results 
                 # endpoint = "http://disection.herokuapp.com/disease_check"
                 # r = requests.post(endpoint, {"image_url": attachmentUrl})
-                res = fetch_data_from_url(attachmentUrl)
-                sending_sender_action(psid, 'typing_off')
-                # print(r.content)
-                callSendAPI(psid,getDiseaaseResponse(res) )
+                # res = fetch_data_from_url(attachmentUrl)
+                # sending_sender_action(psid, 'typing_off')
+                # # print(r.content)
+                # callSendAPI(psid,getDiseaaseResponse(res) )
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
