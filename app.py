@@ -186,6 +186,7 @@ def handleMessage(psid, msg) :
                 globDict["SELL_FLAG"] =False
                 dataS = gist.read_database()
                 dataS["data"]["products"].append({})
+                gist.write_database(dataS)
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
 
             else : 
