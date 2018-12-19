@@ -20,8 +20,8 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 # Session = sessionmaker(bind=engine)
 # # Session.configure(bind=engine)
 # session = Session()
-SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.S.) per KG", "minimum quantity", "picture"]
-SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item", "picture"]
+SELL_LIST = ["Product Name", "picture","Available Quantity", "Rate(R.S.) per KG", "minimum quantity"]
+SELL_IDS = ["prod_id", "picture", "available_item", "price_per_unit", "minimum_item"]
 
 def savePickle(index, flag ) :
   
@@ -179,8 +179,10 @@ def handleMessage(psid, msg) :
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
                 print()
             else : 
-                if 
-                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
+                if SELL_IDS[globDict["SELL_INDEX"]] == "picture" : 
+                    callSendAPI(psid, {"text" : "Please send a picture of the harvest."})
+                else :
+                    callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
         elif "registration" in msg["text"] : 
             globDict["SELL_INDEX"] = 0
@@ -214,12 +216,16 @@ def handleMessage(psid, msg) :
         
     elif msg.get("attachments") : 
         if msg["attachments"][0]["type"] == "image" :
+            if globDict["SELL_FLAG"] : 
+                addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
+                globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
+            else : 
             #Found the image now send it to API to get result  
-            attachmentUrl = msg["attachments"][0]["payload"]["url"]
-            callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
-            sending_sender_action(psid, 'typing_on')
-            #Send results 
-            sending_sender_action(psid, 'typing_off')
+                attachmentUrl = msg["attachments"][0]["payload"]["url"]
+                callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
+                sending_sender_action(psid, 'typing_on')
+                #Send results 
+                sending_sender_action(psid, 'typing_off')
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
@@ -337,6 +343,8 @@ def sending_sender_action(recipient_id, sender_action):
                       params=params, headers=headers, data=data)
 
 def addSellData(psid,key,val) : 
+    print(key)
+    print(val)
     # seller = db.session.query(User).get(psid)
     # stck = seller.user_stock
     # setattr(stck, key, val)
