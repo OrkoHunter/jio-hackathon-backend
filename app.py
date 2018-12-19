@@ -142,6 +142,9 @@ def handleMessage(psid, msg) :
             globDict["SELL_FLAG"] = True
             globDict["SELL_INDEX"] = 0
             resp["text"] = "Please tell the {}".format(SELL_LIST[0])
+            savePickle(0, True)
+            newD  = getPickleDict()
+            print(newD)
             callSendAPI(psid, resp)
         else :
             globDict["SELL_INDEX"] = 0
