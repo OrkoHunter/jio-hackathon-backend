@@ -22,7 +22,7 @@ Session = sessionmaker(bind=engine)
 # Session.configure(bind=engine)
 session = Session()
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
-SELL_IDS = ["pname", "availQuant", "rate", "minQuant"]
+SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item"]
 
 def savePickle(index, flag ) :
   
@@ -118,7 +118,8 @@ def handleMessage(psid, msg) :
     if "text" in msg.keys() : 
         
         if globDict["SELL_FLAG"] : 
-            updateSELLVALPick({SELL_IDS[globDict["SELL_INDEX"]] : msg["text"]})
+            # updateSELLVALPick({SELL_IDS[globDict["SELL_INDEX"]] : msg["text"]})
+            addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
             globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
 
             if globDict["SELL_INDEX"] > 3 : 
@@ -213,6 +214,13 @@ def callSendAPI(psid, resp) :
                       params=params, headers=headers, data=data)
     print(r)
     print(r.text)
+
+
+def addSellData(psid,key,val) : 
+    seller = session.query(User).get(user_id)
+    stck = seller.user_stock
+    setattr(stck, key, val)
+    session.commit()
 
 def UpdateFromDict(table, values, user_id):
     if table=="user":
