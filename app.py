@@ -5,7 +5,7 @@ import unnati
 import tables
 import json
 from flask import Flask, render_template, redirect, request
-
+import time
 import requests
 from flask_sqlalchemy import SQLAlchemy
 import pickle
@@ -226,13 +226,47 @@ def handleMessage(psid, msg) :
         elif msg["attachments"][0]["type"] == "location" :
             callSendAPI(psid, {"text" : "Thank you for sharing your location. "})
             nit, phos = unnati.getData(msg["attachments"][0]["payload"]["coordinates"]["lat"], msg["attachments"][0]["payload"]["coordinates"]["long"])
+            sending_sender_action(psid, 'typing_on')
+            time.sleep(1000)
+
             print(nit)
             print(phos)
+            callSendAPI(psid, {"text" : "Below are the recommended fertiliser dosages for nitrogen requirement."})
+            callSendAPI(psid, getFertiliserResponse(nit, "http://i.imgur.com/BHlC0zj.jpg"))
+            sending_sender_action(psid, 'typing_on')
+            time.sleep(1000)
+            callSendAPI(psid, {"text" : "Below are the recommended fertiliser dosages for phosphorus requirement."})
+            callSendAPI(psid, getFertiliserResponse(phos,"http://i.imgur.com/Ao1vPNe.jpg"))
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
+def getFertiliserResponse(data,img) : 
+    resp = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+            ]
+        }
+        }
+    }
 
+    for k,v in data.items():
+        item_to_sell =  {
+        "title":k,
+        "subtitle":"{} KG/Ha".format(v),
+        "image_url":img,
+        "buttons":[
+            {
+                "type":"web_url",
+                "url":"https://www.google.com/search?q=" + k,
+                "title":"More info"
+              }]      
+        }
+        resp["attachment"]["payload"]["elements"].append(item_to_sell)
+    return resp
 
 def getRegistrationDict() :
     resp = {"attachment":{
