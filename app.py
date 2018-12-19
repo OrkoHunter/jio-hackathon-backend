@@ -110,7 +110,6 @@ def verify_facebook():
 def handleMessage(psid, msg) : 
     global SELL_FLAG, SELL_INDEX, SELL_LIST, SELL_IDS, SELL_VAL_DICT
     globDict = getPickleDict()
-    SELL_FLAG = globDict["SELL_INDEX"]
     resp = {}
     if "text" in msg.keys() : 
         
@@ -149,6 +148,8 @@ def handleMessage(psid, msg) :
             resp["text"] = "You sent " + msg["text"]
             callSendAPI(psid, resp)
         savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
+        newD  = getPickleDict()
+        print(newD)
     elif msg.get("attachments") : 
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
         print("attachmentUrl")
