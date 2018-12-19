@@ -10,7 +10,7 @@ class User(Base):
     user_name = Column(String)
     address = Column(String)
     phone = Column(String)
-    user_stock = relationship("stock")
+    user_stock = relationship("Stock")
     
     def __repr__(self):
         return "<User(name={}, user_id={},address={},phone={},stock={})>".format(user_name,user_id,address,phone,user_stock)
@@ -33,6 +33,7 @@ class Stock(Base):
     price_per_unit = Column(Float)
     minimum_item = Column(Integer)
     picture = Column(String)
+    owner_id = Column(Integer, ForeignKey('user.user_id'))
 
     def __repr__(self):
         return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(prod_id,unit_type,available_item,price_per_unit,minimum_item)
