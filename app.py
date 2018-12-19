@@ -113,20 +113,20 @@ def handleMessage(psid, msg) :
     if "text" in msg.keys() : 
         
         if globDict["SELL_FLAG"] : 
-            SELL_VAL_DICT[SELL_IDS[int(globDict["SELL_INDEX"])]] = msg["text"]
-            globDict["SELL_INDEX"] = (int(globDict["SELL_INDEX"]) + 1)
+            SELL_VAL_DICT[SELL_IDS[globDict["SELL_INDEX"]]] = msg["text"]
+            globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
 
-            if int(globDict["SELL_INDEX"]) > 3 : 
-                int(globDict["SELL_INDEX"]) = 0
+            if globDict["SELL_INDEX"] > 3 : 
+                globDict["SELL_INDEX"] = 0
                 UpdateFromDict("sell", SELL_VAL_DICT, psid)
                 SELL_VAL_DICT = {}
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
             else : 
-                callSendAPI(psid, {"text" : SELL_LIST[int(globDict["SELL_INDEX"])]})    
+                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
         elif "registration" in msg["text"] : 
-            int(globDict["SELL_INDEX"]) = 0
+            globDict["SELL_INDEX"] = 0
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
 
