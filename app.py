@@ -9,6 +9,7 @@ from flask import Flask, render_template, redirect, request
 import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import pickle
 
 """
 Fetch static data
@@ -20,11 +21,37 @@ engine = create_engine('mysql://fykfncuva5c32yws:y4581v48wq0jchft@ou6zjjcqbi307l
 Session = sessionmaker(bind=engine)
 # Session.configure(bind=engine)
 session = Session()
-
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
-SELL_IDS = ["pname", "availQuant", "rate", "minQuant"]
-SELL_INDEX = 0
-SELL_FLAG = False
+SELL_IDS = ["pname", "availQuant", "rate", "minQuant"],
+
+def savePickle(index=0, flag = False ) : 
+    d= {
+    "SELL_INDEX" : 0,
+    "SELL_FLAG" : False
+    }
+    # Store data (serialize)
+    with open('asd.pickle', 'wb') as handle:
+        pickle.dump(d, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+savePickle()
+
+def getPickleDict() : 
+    with open('asd.pickle', 'rb') as handle:
+        unserialized_data = pickle.load(handle)
+        return unserialized_data
+
+def updateSELLVALPick(d) : 
+    x= None
+    try : 
+        with open('sellDict.pickle', 'rb') as handle:
+            data = pickle.load(handle)
+            for k,v in d.items() : 
+                data[k] = v 
+                x= data
+    except : 
+        x =d
+    with open('sellDict.pickle', 'wb') as handle:
+        pickle.dump(x, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 SELL_VAL_DICT = {
@@ -53,6 +80,8 @@ def verify_facebook():
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             return challenge
     if request.method == "POST" : 
+        globDict = getPickleDict()
+      
         body = request.json
         if body["object"] == "page" : 
             for entry in body["entry"] :
@@ -62,7 +91,10 @@ def verify_facebook():
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
                 print("Sender ID " + psid)
-
+                print("Sell Index is " + str(globDict["SELL_INDEX"]))
+                print("Sell Flag is " + str(globDict["SELL_FLAG"]))
+                if psid == "1013601592174583" : 
+                    return "Entry Rec",200
                 if "message" in event.keys() : 
                     handleMessage(psid,event["message"] )
                     #Handle messages
@@ -77,23 +109,28 @@ def verify_facebook():
 
 def handleMessage(psid, msg) : 
     global SELL_FLAG, SELL_INDEX, SELL_LIST, SELL_IDS, SELL_VAL_DICT
+    globDict = getPickleDict()
     resp = {}
     if "text" in msg.keys() : 
+        
+        if globDict["SELL_FLAG"] : 
+            SELL_VAL_DICT[SELL_IDS[globDict["SELL_INDEX"]]] = msg["text"]
+            globDict["SELL_INDEX"] +=1
 
-        if SELL_FLAG : 
-            if SELL_INDEX > 3 : 
-                SELL_INDEX = 0
+            if globDict["SELL_INDEX"] > 3 : 
+                globDict["SELL_INDEX"] = 0
                 UpdateFromDict("sell", SELL_VAL_DICT, psid)
                 SELL_VAL_DICT = {}
+                globDict["SELL_FLAG"] =False
+                callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
             else : 
-                SELL_VAL_DICT[SELL_IDS[SELL_INDEX]] = msg["text"]
-                SELL_INDEX +=1
-                callSendAPI(psid, {"text" : SELL_LIST[SELL_INDEX]})    
-            
+                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
         elif "registration" in msg["text"] : 
+            globDict["SELL_INDEX"] = 0
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
+
         # elif "buy" in msg["text"] : 
         #     print("found buy")
         #     resp = getBuyButtonRespFromList(12)
@@ -102,13 +139,17 @@ def handleMessage(psid, msg) :
 
         elif "sell" in msg["text"] : 
             print("in sell")
-            SELL_FLAG = True
+            globDict["SELL_FLAG"] = True
+            globDict["SELL_INDEX"] = 0
             resp["text"] = "Please tell the {}".format(SELL_LIST[0])
             callSendAPI(psid, resp)
         else :
+            globDict["SELL_INDEX"] = 0
             resp["text"] = "You sent " + msg["text"]
             callSendAPI(psid, resp)
-
+        savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
+        newD  = getPickleDict()
+        print(newD)
     elif msg.get("attachments") : 
         attachmentUrl = msg["attachments"][0]["payload"]["url"]
         print("attachmentUrl")
@@ -149,7 +190,7 @@ def handlePostback(psid, postBack) :
     pass
 
 def callSendAPI(psid, resp) : 
-
+    print(resp)
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
     }
@@ -208,3 +249,4 @@ def ItemsList():
     return resp
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+    
