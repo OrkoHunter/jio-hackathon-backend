@@ -39,7 +39,9 @@ savePickle(0, False)
 def getPickleDict() : 
     with open('asd.pickle', 'rb') as handle:
         unserialized_data = pickle.load(handle)
-        return unserialized_data
+        print("Unser Data")
+        print(unserialized_data)
+    return unserialized_data
 
 def updateSELLVALPick(d) : 
     x= None
