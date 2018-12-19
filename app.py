@@ -101,7 +101,7 @@ class Stock(db.Model):
     def __repr__(self):
         return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(self.prod_id,self.unit_type,self.available_item,self.price_per_unit,self.minimum_item)
 
-db.create_all()
+# db.create_all()
 
 # Valid routes
 @app.route("/")
