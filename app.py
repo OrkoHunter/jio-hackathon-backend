@@ -158,7 +158,11 @@ def handleMessage(psid, msg) :
         savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
         
     elif msg.get("attachments") : 
-        attachmentUrl = msg["attachments"][0]["payload"]["url"]
+        if msg["attachments"][0]["type"] == "image" :
+            #Found the image now send it to API to get result  
+            attachmentUrl = msg["attachments"][0]["payload"]["url"]
+            callSendAPI({"text" : "Got your image. Please wait till I process it."})
+            sending_sender_action(psid, 'typing_on')
         print("attachmentUrl")
         resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
@@ -215,9 +219,25 @@ def callSendAPI(psid, resp) :
     print(r)
     print(r.text)
 
+def sending_sender_action(recipient_id, sender_action):
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps(
+        {
+            "recipient": {
+                "id": recipient_id
+            },
+            "sender_action": sender_action
+        })
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+                      params=params, headers=headers, data=data)
 
 def addSellData(psid,key,val) : 
-    seller = session.query(User).get(user_id)
+    seller = session.query(User).get(psid)
     stck = seller.user_stock
     setattr(stck, key, val)
     session.commit()
