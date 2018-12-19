@@ -106,7 +106,7 @@ def verify_facebook():
 
 
 def handleMessage(psid, msg) : 
-    global , SELL_INDEX, SELL_LIST, SELL_IDS
+    global  SELL_INDEX, SELL_LIST, SELL_IDS
     SELL_VAL_DICT = {}
     globDict = getPickleDict()
     resp = {}
