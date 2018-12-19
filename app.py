@@ -24,16 +24,16 @@ session = Session()
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
 SELL_IDS = ["pname", "availQuant", "rate", "minQuant"],
 
-def savePickle(index=0, flag = False ) : 
+def savePickle(index, flag ) : 
     d= {
     "SELL_INDEX" : 0,
     "SELL_FLAG" : False
     }
     # Store data (serialize)
     with open('asd.pickle', 'wb') as handle:
-        pickle.dump(d, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(d, handle)
 
-savePickle()
+savePickle(0, False)
 
 def getPickleDict() : 
     with open('asd.pickle', 'rb') as handle:
@@ -51,7 +51,7 @@ def updateSELLVALPick(d) :
     except : 
         x =d
     with open('sellDict.pickle', 'wb') as handle:
-        pickle.dump(x, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(x, handle)
 
 
 SELL_VAL_DICT = {
