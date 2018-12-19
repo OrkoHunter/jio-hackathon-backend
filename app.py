@@ -126,6 +126,11 @@ def verify_facebook():
         body = request.json
         if body["object"] == "page" : 
             for entry in body["entry"] :
+                if entry.get("postback") : 
+                    postb = entry["postback"]
+                    payload = postb["payload"]
+                    print(payload)
+                    return "ok", 200
                 event = entry["messaging"][0]
                 print(event)
 
@@ -140,9 +145,6 @@ def verify_facebook():
                     handleMessage(psid,event["message"] )
                     #Handle messages
 
-                elif "postback" in event.keys() : 
-                    #Handle Postbacks 
-                    pass
                 return "Entry Rec",200
     else : 
         return "error",404
@@ -196,7 +198,11 @@ def handleMessage(psid, msg) :
         savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
         
     elif msg.get("attachments") : 
-        attachmentUrl = msg["attachments"][0]["payload"]["url"]
+        if msg["attachments"][0]["type"] == "image" :
+            #Found the image now send it to API to get result  
+            attachmentUrl = msg["attachments"][0]["payload"]["url"]
+            callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
+            sending_sender_action(psid, 'typing_on')
         print("attachmentUrl")
         resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
@@ -253,9 +259,25 @@ def callSendAPI(psid, resp) :
     print(r)
     print(r.text)
 
+def sending_sender_action(recipient_id, sender_action):
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps(
+        {
+            "recipient": {
+                "id": recipient_id
+            },
+            "sender_action": sender_action
+        })
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+                      params=params, headers=headers, data=data)
 
 def addSellData(psid,key,val) : 
-    seller = db.session.query(User).get(user_id)
+    seller = db.session.query(User).get(psid)
     stck = seller.user_stock
     setattr(stck, key, val)
     db.session.commit()
