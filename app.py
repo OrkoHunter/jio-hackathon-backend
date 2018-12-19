@@ -217,8 +217,9 @@ def handleMessage(psid, msg) :
     elif msg.get("attachments") : 
         if msg["attachments"][0]["type"] == "image" :
             if globDict["SELL_FLAG"] : 
-                addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
+                addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["attachments"][0]["payload"]["url"] )
                 globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
+                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]}) 
             else : 
             #Found the image now send it to API to get result  
                 attachmentUrl = msg["attachments"][0]["payload"]["url"]
