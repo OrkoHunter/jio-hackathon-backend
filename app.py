@@ -217,9 +217,40 @@ def UpdateFromDict(table, values, user_id):
         seller = session.query(User).get(user_id)
         unit = tables.Stock(**values)
         seller.user_stock.append(unit)
+        session.add(unit)
+    session.commit()    
 
+def ItemsList():
+    resp = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+            ]
+        }
+        }
+    }
 
-
+    for instance in session.query(User).order_by(user_id):
+        for it in instance.user_stock:
+            item_to_sell =  {
+            "title":"",
+            "subtitle":"",
+            "image_url":"",
+            "buttons":[
+                {
+                "type":"postback",
+                "title":"Buy Now!",
+                "payload":""
+                }]      
+            }
+            item_to_sell["title"] = it.prod_id
+            item_to_sell["subtitle"] = it.price_per_unit
+            item_to_sell["image_url"] = it.picture
+            resp["attachment"]["payload"]["elements"].append(item_to_sell)
+    
+    return resp
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
     
