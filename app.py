@@ -23,6 +23,13 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 SELL_LIST = ["Product Name", "picture","available quantity (in KG)", "rate(R.S.) per KG", "minimum order quantity you wish to receive (in KG)"]
 SELL_IDS = ["prodName", "picture", "available_item", "price_per_unit", "minimum_item"]
 
+
+DISEASE_IMAGE = {
+    "apple black rot":"http://farm3.static.flickr.com/2659/5707297440_3922255890.jpg",
+    "healthy apple":"https://cdn0.iconfinder.com/data/icons/simple-icons-ii/69/04-512.png",
+    "cedar apple rust":"https://www.fs.fed.us/wildflowers/plant-of-the-week/images/cedarapplerust/Gymnosparangium_juniperi-virginianae_23A_lg.jpg",
+    "apple scab":"http://www.missouribotanicalgarden.org/Portals/0/Gardening/Gardening%20Help/images/Pests/Apple_Scab1411.jpg"
+}
 def savePickle(index, flag ) :
   
     d= {
