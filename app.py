@@ -244,6 +244,7 @@ def ItemsList():
             item_to_sell["title"] = it.prod_id
             item_to_sell["subtitle"] = it.price_per_unit
             item_to_sell["image_url"] = it.picture
+            item_to_sell["buttons"]["payload"] = "BUY_NOW_"+it.prod_id
             resp["attachment"]["payload"]["elements"].append(item_to_sell)
     
     return resp
