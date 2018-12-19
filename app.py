@@ -88,6 +88,11 @@ def verify_facebook():
         body = request.json
         if body["object"] == "page" : 
             for entry in body["entry"] :
+                if entry.get("postback") : 
+                    postb = entry["postback"]
+                    payload = postb["payload"]
+                    print(payload)
+                    return "ok", 200
                 event = entry["messaging"][0]
                 print(event)
 
@@ -102,9 +107,6 @@ def verify_facebook():
                     handleMessage(psid,event["message"] )
                     #Handle messages
 
-                elif "postback" in event.keys() : 
-                    #Handle Postbacks 
-                    pass
                 return "Entry Rec",200
     else : 
         return "error",404
