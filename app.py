@@ -94,11 +94,11 @@ def handleMessage(psid, msg) :
         elif "registration" in msg["text"] : 
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
-        elif "buy" in msg["text"] : 
-            print("found buy")
-            resp = getBuyButtonRespFromList(12)
-            print(resp)
-            callSendAPI(psid, resp)
+        # elif "buy" in msg["text"] : 
+        #     print("found buy")
+        #     resp = getBuyButtonRespFromList(12)
+        #     print(resp)
+        #     callSendAPI(psid, resp)
 
         elif "sell" in msg["text"] : 
             print("in sell")
