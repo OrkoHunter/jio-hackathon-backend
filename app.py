@@ -152,7 +152,7 @@ def verify_facebook():
 
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
-                print(get_user(psid))
+                # print(get_user(psid))
                 print("Sender ID " + psid)
                 print("Sell Index is " + str(globDict["SELL_INDEX"]))
                 print("Sell Flag is " + str(globDict["SELL_FLAG"]))
