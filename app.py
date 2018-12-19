@@ -256,6 +256,7 @@ def handleMessage(psid, msg) :
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
 
         elif msg["attachments"][0]["type"] == "location" :
+            pass
             callSendAPI(psid, {"text" : "Thank you for sharing your location. "})
             nit, phos = unnati.getData(msg["attachments"][0]["payload"]["coordinates"]["lat"], msg["attachments"][0]["payload"]["coordinates"]["long"])
             sending_sender_action(psid, 'typing_on')
