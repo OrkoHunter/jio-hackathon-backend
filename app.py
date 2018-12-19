@@ -89,11 +89,12 @@ def handleMessage(psid, msg) :
                 UpdateFromDict("sell", SELL_VAL_DICT, psid)
                 SELL_VAL_DICT = {}
                 SELL_FLAG =False
-                callSendAPI(psid, "Thank you for the information. Your listing has been posted. ")
+                callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
             else : 
                 callSendAPI(psid, {"text" : SELL_LIST[SELL_INDEX]})    
 
         elif "registration" in msg["text"] : 
+            SELL_INDEX = 0
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
 
@@ -106,9 +107,11 @@ def handleMessage(psid, msg) :
         elif "sell" in msg["text"] : 
             print("in sell")
             SELL_FLAG = True
+            SELL_INDEX = 0
             resp["text"] = "Please tell the {}".format(SELL_LIST[0])
             callSendAPI(psid, resp)
         else :
+            SELL_INDEX = 0
             resp["text"] = "You sent " + msg["text"]
             callSendAPI(psid, resp)
 
