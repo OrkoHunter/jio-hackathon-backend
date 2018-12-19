@@ -228,7 +228,13 @@ def handleMessage(psid, msg) :
                 callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
                 sending_sender_action(psid, 'typing_on')
                 #Send results 
+                endpoint = "http://disection.herokuapp.com/disease_check"
+                sample_image_url = "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Apple___healthy/011d02f3-5c3c-4484-a384-b1a0a0dbdec1___RS_HL%207544.JPG"
+
+                r = requests.post(endpoint, {"image_url": sample_image_url})
+                
                 sending_sender_action(psid, 'typing_off')
+                callSendAPI(psid, r.content)
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
