@@ -20,7 +20,7 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 # Session = sessionmaker(bind=engine)
 # # Session.configure(bind=engine)
 # session = Session()
-SELL_LIST = ["Product Name", "picture","Available Quantity", "Rate(R.S.) per KG", "minimum quantity"]
+SELL_LIST = ["Product Name", "picture","available quantity (in KG)", "Rate(R.S.) per KG", "minimum order quantity you wish to receive"]
 SELL_IDS = ["prod_id", "picture", "available_item", "price_per_unit", "minimum_item"]
 
 def savePickle(index, flag ) :
@@ -145,6 +145,7 @@ def verify_facebook():
 
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
+                print(get_user(psid))
                 print("Sender ID " + psid)
                 print("Sell Index is " + str(globDict["SELL_INDEX"]))
                 print("Sell Flag is " + str(globDict["SELL_FLAG"]))
@@ -173,18 +174,18 @@ def handleMessage(psid, msg) :
 
             if globDict["SELL_INDEX"] > 4 : 
                 globDict["SELL_INDEX"] = 0
-                UpdateFromDict("sell", getSellValDict(), psid)
+                # UpdateFromDict("sell", getSellValDict(), psid)
                 print(getSellValDict())
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
-                print()
+
             else : 
                 if SELL_IDS[globDict["SELL_INDEX"]] == "picture" : 
                     callSendAPI(psid, {"text" : "Please send a picture of the harvest."})
                 else :
-                    callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
+                    callSendAPI(psid, {"text" : "Please tell the " + SELL_LIST[globDict["SELL_INDEX"]]})    
 
-        elif "registration" in msg["text"] : 
+        elif "registration" in msg["text"].lower() : 
             globDict["SELL_INDEX"] = 0
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
@@ -195,7 +196,7 @@ def handleMessage(psid, msg) :
         #     print(resp)
         #     callSendAPI(psid, resp)
 
-        elif "sell" in msg["text"] : 
+        elif "sell" in msg["text"].lower() : 
             print("in sell")
             globDict["SELL_FLAG"] = True
             globDict["SELL_INDEX"] = 0
@@ -203,7 +204,7 @@ def handleMessage(psid, msg) :
             savePickle(0, True)
             callSendAPI(psid, resp)
 
-        elif "fertilizer" in msg["text"] : 
+        elif "fertilizer" in msg["text"].lower() : 
             print("in fert")
             resp["text"] = "Please send your current location to know optimum fertilizer quantity"
             callSendAPI(psid, resp)
@@ -217,8 +218,10 @@ def handleMessage(psid, msg) :
     elif msg.get("attachments") : 
         if msg["attachments"][0]["type"] == "image" :
             if globDict["SELL_FLAG"] : 
-                addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
+                addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["attachments"][0]["payload"]["url"] )
                 globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
+                savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
+                callSendAPI(psid, {"text" : "Please tell the " + SELL_LIST[globDict["SELL_INDEX"]]}) 
             else : 
             #Found the image now send it to API to get result  
                 attachmentUrl = msg["attachments"][0]["payload"]["url"]
@@ -465,6 +468,18 @@ def getNews():
     }
     
     return resp
+def get_user(sender_id):
+    '''
+    The user_details dictionary will have following keys
+    first_name : First name of user
+    last_name : Last name of user
+    profile_pic : Profile picture of user
+    locale : Locale of the user on Facebook
+    '''
+    base_url = "https://graph.facebook.com/v2.6/{}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token={}".format(
+        sender_id, os.environ["PAGE_ACCESS_TOKEN"])
+    user_details = requests.get(base_url).json()
+    return user_details
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
     
