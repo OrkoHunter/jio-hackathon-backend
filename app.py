@@ -20,8 +20,8 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 # Session = sessionmaker(bind=engine)
 # # Session.configure(bind=engine)
 # session = Session()
-SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
-SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item"]
+SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.S.) per KG", "minimum quantity", "picture"]
+SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item", "picture"]
 
 def savePickle(index, flag ) :
   
@@ -171,7 +171,7 @@ def handleMessage(psid, msg) :
             addSellData(psid,SELL_IDS[globDict["SELL_INDEX"]], msg["text"] )
             globDict["SELL_INDEX"] = (globDict["SELL_INDEX"] + 1)
 
-            if globDict["SELL_INDEX"] > 3 : 
+            if globDict["SELL_INDEX"] > 4 : 
                 globDict["SELL_INDEX"] = 0
                 UpdateFromDict("sell", getSellValDict(), psid)
                 print(getSellValDict())
@@ -179,6 +179,7 @@ def handleMessage(psid, msg) :
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
                 print()
             else : 
+                if 
                 callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
 
         elif "registration" in msg["text"] : 
@@ -336,10 +337,10 @@ def sending_sender_action(recipient_id, sender_action):
                       params=params, headers=headers, data=data)
 
 def addSellData(psid,key,val) : 
-    seller = db.session.query(User).get(psid)
-    stck = seller.user_stock
-    setattr(stck, key, val)
-    db.session.commit()
+    # seller = db.session.query(User).get(psid)
+    # stck = seller.user_stock
+    # setattr(stck, key, val)
+    # db.session.commit()
 
 def UpdateFromDict(table, values, user_id):
     if table=="user":
