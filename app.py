@@ -218,6 +218,8 @@ def handleMessage(psid, msg) :
 
             callSendAPI(psid, getNews())
 
+        elif "buy" in msg["text"].lower() : 
+            resp = getBuyResp()
         elif "fertilizer" in msg["text"].lower() : 
             print("in fert")
             resp["text"] = "Please send your current location to know optimum fertilizer quantity"
@@ -244,10 +246,10 @@ def handleMessage(psid, msg) :
                 #Send results 
                 # endpoint = "http://disection.herokuapp.com/disease_check"
                 # r = requests.post(endpoint, {"image_url": attachmentUrl})
-                # res = fetch_data_from_url(attachmentUrl)
-                # sending_sender_action(psid, 'typing_off')
+                res = fetch_data_from_url(attachmentUrl)
+                sending_sender_action(psid, 'typing_off')
                 # # print(r.content)
-                # callSendAPI(psid,getDiseaaseResponse(res) )
+                callSendAPI(psid,getDiseaaseResponse(res) )
         elif msg["attachments"][0]["type"] == "audio" :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
@@ -269,6 +271,10 @@ def handleMessage(psid, msg) :
         # print("attachmentUrl")
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
+def getBuyResp() : 
+    d = gist.read_database()
+    
+
 
 def fetch_data_from_url(sample_image_url)  : 
     endpoint = "http://disection.herokuapp.com/disease_check"
@@ -358,8 +364,7 @@ def getRegistrationDict() :
 
     return resp
 
-def handlePostback(psid, postBack) :
-    pass
+
 
 def callSendAPI(psid, resp) : 
     print(resp)
