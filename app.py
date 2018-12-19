@@ -220,6 +220,7 @@ def handleMessage(psid, msg) :
 
         elif "buy" in msg["text"].lower() : 
             resp = getBuyResp()
+            callSendAPI(psid, getBuyResp())
         elif "fertilizer" in msg["text"].lower() : 
             print("in fert")
             resp["text"] = "Please send your current location to know optimum fertilizer quantity"
@@ -273,7 +274,34 @@ def handleMessage(psid, msg) :
     # callSendAPI(psid,resp)
 def getBuyResp() : 
     d = gist.read_database()
-    
+    prd = d["data"]["products"]
+     
+    resp = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+            ]
+        }
+        }
+    }
+    for i in prd :
+        item_to_sell =  {
+        "title":i["prodName"],
+        "subtitle":"Price per unit - {}\nAvailable Quantity - {} kg\nMinimum Order - {} kg".format(i["price_per_unit"], i["available_item"], i["minimum_item"]),
+        "image_url": i["picture"],
+        "buttons":[
+            {
+                "type":"web_url",
+                "url":"https://www.google.com/",
+                "title":"Buy Now"
+              }]      
+        }
+        resp["attachment"]["payload"]["elements"].append(item_to_sell)
+    return resp
+
+
 
 
 def fetch_data_from_url(sample_image_url)  : 
