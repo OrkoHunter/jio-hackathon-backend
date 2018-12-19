@@ -30,10 +30,13 @@ def savePickle(index, flag ) :
     "SELL_INDEX" : index,
     "SELL_FLAG" : flag
     }
+
     # Store data (serialize)
     with open('asd.pickle', 'wb') as handle:
         pickle.dump(d, handle)
 
+    with open('sellDict.pickle', 'wb') as handle:
+        pickle.dump({}, handle)
 savePickle(0, False)
 
 def getPickleDict() : 
@@ -42,17 +45,10 @@ def getPickleDict() :
     return unserialized_data
 
 def updateSELLVALPick(d) : 
-    x= None
-    try : 
-        with open('sellDict.pickle', 'rb') as handle:
-            data = pickle.load(handle)
-            for k,v in d.items() : 
-                data[k] = v 
-                x= data
-    except : 
-        x =d
-    with open('sellDict.pickle', 'wb') as handle:
-        pickle.dump(x, handle)
+    with open('sellDict.pickle', 'rb') as handle:
+        data = pickle.load(handle)
+        for k,v in d.items() : 
+            data[k] = v 
 
 def getSellValDict():
     with open('sellDict.pickle', 'rb') as handle:
