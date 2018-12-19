@@ -79,7 +79,7 @@ def handleMessage(psid, msg) :
     global SELL_FLAG, SELL_INDEX, SELL_LIST, SELL_IDS, SELL_VAL_DICT
     resp = {}
     if "text" in msg.keys() : 
-
+        print("Sell Index is " + str(SELL_INDEX))
         if SELL_FLAG : 
             SELL_VAL_DICT[SELL_IDS[SELL_INDEX]] = msg["text"]
             SELL_INDEX +=1
@@ -92,11 +92,11 @@ def handleMessage(psid, msg) :
                 callSendAPI(psid, "Thank you for the information. Your listing has been posted. ")
             else : 
                 callSendAPI(psid, {"text" : SELL_LIST[SELL_INDEX]})    
-            
 
         elif "registration" in msg["text"] : 
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
+
         # elif "buy" in msg["text"] : 
         #     print("found buy")
         #     resp = getBuyButtonRespFromList(12)
@@ -152,7 +152,7 @@ def handlePostback(psid, postBack) :
     pass
 
 def callSendAPI(psid, resp) : 
-
+    print(resp)
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
     }
