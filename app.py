@@ -24,7 +24,8 @@ session = Session()
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
 SELL_IDS = ["pname", "availQuant", "rate", "minQuant"],
 
-def savePickle(index, flag ) : 
+def savePickle(index, flag ) :
+    print("Updating pickle index {} and flag {}".format(index, flag))
     d= {
     "SELL_INDEX" : 0,
     "SELL_FLAG" : False
