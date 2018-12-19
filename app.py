@@ -7,8 +7,7 @@ import json
 from flask import Flask, render_template, redirect, request
 
 import requests
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from flask_sqlalchemy import SQLAlchemy
 import pickle
 
 """
@@ -16,11 +15,11 @@ Fetch static data
 """
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
-
-engine = create_engine('mysql://fykfncuva5c32yws:y4581v48wq0jchft@ou6zjjcqbi307lip.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/qunovkvl5ol8c6pu', echo=True)
-Session = sessionmaker(bind=engine)
-# Session.configure(bind=engine)
-session = Session()
+# engine = create_engine('sqlite:///:memory:', echo=True)
+# # engine = create_engine('mysql://fykfncuva5c32yws:y4581v48wq0jchft@ou6zjjcqbi307lip.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/qunovkvl5ol8c6pu', echo=True)
+# Session = sessionmaker(bind=engine)
+# # Session.configure(bind=engine)
+# session = Session()
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
 SELL_IDS = ["prod_id", "available_item", "price_per_unit", "minimum_item"]
 
@@ -61,9 +60,48 @@ def getSellValDict():
     with open('sellDict.pickle', 'rb') as handle:
         unserialized_data = pickle.load(handle)
     return unserialized_data    
-app = Flask(__name__, static_url_path='/static')
 
+app = Flask(__name__, static_url_path='/static')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db = SQLAlchemy(app)
 app.config['SESSION_TYPE'] = 'filesystem'
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String)
+    address = db.Column(db.String)
+    phone = db.Column(db.String)
+    user_stock = db.relationship("Stock")
+    
+    def __repr__(self):
+        return "<User(name={}, user_id={},address={},phone={},stock={})>".format(self.user_name,self.user_id,self.address,self.phone,self.user_stock)
+
+class Buyer(db.Model):
+    __tablename__ = 'buyer'
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String)
+    address = db.Column(db.String)
+    phone = db.Column(db.String)
+    
+    def __repr__(self):
+        return "<Buyer(name={}, user_id={},address={},phone={})>".format(self.user_name,self.user_id,self.address,self.phone)
+
+class Stock(db.Model):
+    __tablename__ = 'stock'
+    prod_id = db.Column(db.String, primary_key=True)
+    unit_type = db.Column(db.String)
+    available_item = db.Column(db.Integer)
+    price_per_unit = db.Column(db.Float)
+    minimum_item = db.Column(db.Integer)
+    picture = db.Column(db.String)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+
+    def __repr__(self):
+        return "<User(id={}, unit_type={},available_item={},price_per_unit={},min_item={})>".format(self.prod_id,self.unit_type,self.available_item,self.price_per_unit,self.minimum_item)
+
+db.create_all()
 
 # Valid routes
 @app.route("/")
@@ -217,18 +255,18 @@ def callSendAPI(psid, resp) :
 
 
 def addSellData(psid,key,val) : 
-    seller = session.query(User).get(user_id)
+    seller = db.session.query(User).get(user_id)
     stck = seller.user_stock
     setattr(stck, key, val)
-    session.commit()
+    db.session.commit()
 
 def UpdateFromDict(table, values, user_id):
     if table=="user":
-        seller = session.query(User).get(user_id)
+        seller = db.session.query(User).get(user_id)
         unit = tables.Stock(**values)
         seller.user_stock.append(unit)
-        session.add(unit)
-    session.commit()    
+        db.session.add(unit)
+    db.session.commit()    
 
 def ItemsList():
     resp = {
@@ -242,7 +280,7 @@ def ItemsList():
         }
     }
 
-    for instance in session.query(User).order_by(user_id):
+    for instance in db.session.query(User).order_by(user_id):
         for it in instance.user_stock:
             item_to_sell =  {
             "title":"",
@@ -258,7 +296,7 @@ def ItemsList():
             item_to_sell["title"] = it.prod_id
             item_to_sell["subtitle"] = it.price_per_unit
             item_to_sell["image_url"] = it.picture
-            item_to_sell["buttons"]["payload"] = "BUY_NOW_"+it.prod_id
+            item_to_sell["buttons"]["payload"] = "BUYNOW_"+it.prod_id
             resp["attachment"]["payload"]["elements"].append(item_to_sell)
     
     return resp
