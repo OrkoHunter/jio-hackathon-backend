@@ -147,6 +147,7 @@ def handleMessage(psid, msg) :
             globDict["SELL_INDEX"] = 0
             resp["text"] = "You sent " + msg["text"]
             callSendAPI(psid, resp)
+        print("Outside all if")
         savePickle(globDict["SELL_INDEX"], globDict["SELL_FLAG"])
         newD  = getPickleDict()
         print(newD)
