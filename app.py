@@ -85,6 +85,8 @@ def handleMessage(psid, msg) :
                 SELL_INDEX = 0
                 UpdateFromDict("sell", SELL_VAL_DICT, psid)
                 SELL_VAL_DICT = {}
+                SELL_FLAG =False
+                callSendAPI(psid, "Thank you for the information. Your listing has been posted. ")
             else : 
                 SELL_VAL_DICT[SELL_IDS[SELL_INDEX]] = msg["text"]
                 SELL_INDEX +=1
