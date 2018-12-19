@@ -62,7 +62,8 @@ def verify_facebook():
                 #Getting the sender PSID
                 psid = event["sender"]["id"]
                 print("Sender ID " + psid)
-
+                if psid = "1013601592174583" : 
+                    return "Entry Rec",200
                 if "message" in event.keys() : 
                     handleMessage(psid,event["message"] )
                     #Handle messages
