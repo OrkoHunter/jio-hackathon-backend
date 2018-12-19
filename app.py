@@ -212,8 +212,13 @@ def handleMessage(psid, msg) :
             attachmentUrl = msg["attachments"][0]["payload"]["url"]
             callSendAPI(psid,{"text" : "Got your image. Please wait till I process it."})
             sending_sender_action(psid, 'typing_on')
-        print("attachmentUrl")
-        resp["text"] = attachmentUrl
+            #Send results 
+            sending_sender_action(psid, 'typing_off')
+        elif msg["attachments"][0]["type"] == "audio" :
+            attachmentUrl = msg["attachments"][0]["payload"]["url"]
+            callSendAPI(psid,{"text" : "Got your audio. Please wait till I process it."})
+        # print("attachmentUrl")
+        # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
 
