@@ -22,7 +22,7 @@ Session = sessionmaker(bind=engine)
 # Session.configure(bind=engine)
 session = Session()
 SELL_LIST = ["Product Name", "Available Quantity", "Rate(R.s.) per KG", "minimum quantity"]
-SELL_IDS = ["pname", "availQuant", "rate", "minQuant"],
+SELL_IDS = ["pname", "availQuant", "rate", "minQuant"]
 
 def savePickle(index, flag ) :
     print("Updating pickle index {} and flag {}".format(index, flag))
@@ -55,11 +55,6 @@ def updateSELLVALPick(d) :
         x =d
     with open('sellDict.pickle', 'wb') as handle:
         pickle.dump(x, handle)
-
-
-SELL_VAL_DICT = {
-    
-}
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -111,26 +106,27 @@ def verify_facebook():
 
 
 def handleMessage(psid, msg) : 
-    global SELL_FLAG, SELL_INDEX, SELL_LIST, SELL_IDS, SELL_VAL_DICT
+    global , SELL_INDEX, SELL_LIST, SELL_IDS
+    SELL_VAL_DICT = {}
     globDict = getPickleDict()
     resp = {}
     if "text" in msg.keys() : 
         
         if globDict["SELL_FLAG"] : 
-            SELL_VAL_DICT[SELL_IDS[globDict["SELL_INDEX"]]] = msg["text"]
-            globDict["SELL_INDEX"] +=1
+            SELL_VAL_DICT[SELL_IDS[int(globDict["SELL_INDEX"])]] = msg["text"]
+            globDict["SELL_INDEX"] = (int(globDict["SELL_INDEX"]) + 1)
 
-            if globDict["SELL_INDEX"] > 3 : 
-                globDict["SELL_INDEX"] = 0
+            if int(globDict["SELL_INDEX"]) > 3 : 
+                int(globDict["SELL_INDEX"]) = 0
                 UpdateFromDict("sell", SELL_VAL_DICT, psid)
                 SELL_VAL_DICT = {}
                 globDict["SELL_FLAG"] =False
                 callSendAPI(psid,{"text" : "Thank you for the information. Your listing has been posted. "})
             else : 
-                callSendAPI(psid, {"text" : SELL_LIST[globDict["SELL_INDEX"]]})    
+                callSendAPI(psid, {"text" : SELL_LIST[int(globDict["SELL_INDEX"])]})    
 
         elif "registration" in msg["text"] : 
-            globDict["SELL_INDEX"] = 0
+            int(globDict["SELL_INDEX"]) = 0
             resp = getRegistrationDict()
             callSendAPI(psid, resp)
 
