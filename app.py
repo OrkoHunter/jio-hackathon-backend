@@ -45,10 +45,16 @@ def getPickleDict() :
     return unserialized_data
 
 def updateSELLVALPick(d) : 
+    print("Dict to add")
+    print(d)
     with open('sellDict.pickle', 'rb') as handle:
         data = pickle.load(handle)
+        print("init dict")
+        print(d)
         for k,v in d.items() : 
             data[k] = v 
+    print("Final Dict")
+    print(data)
     with open('sellDict.pickle', 'wb') as handle:
         pickle.dump(data, handle)
 def getSellValDict():
