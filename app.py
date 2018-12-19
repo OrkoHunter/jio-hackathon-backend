@@ -267,7 +267,7 @@ def handleMessage(psid, msg) :
         # resp["text"] = attachmentUrl
     # callSendAPI(psid,resp)
 
-def fetch_data_from_url(sample_image_url)  
+def fetch_data_from_url(sample_image_url)  : 
     endpoint = "http://disection.herokuapp.com/disease_check"
     r = requests.post(endpoint, {"image_url": sample_image_url})
     content = r.content
