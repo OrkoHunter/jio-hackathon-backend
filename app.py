@@ -50,7 +50,7 @@ def updateSELLVALPick(d) :
     with open('sellDict.pickle', 'rb') as handle:
         data = pickle.load(handle)
         print("init dict")
-        print(d)
+        print(data)
         for k,v in d.items() : 
             data[k] = v 
     print("Final Dict")
