@@ -49,7 +49,8 @@ def updateSELLVALPick(d) :
         data = pickle.load(handle)
         for k,v in d.items() : 
             data[k] = v 
-
+    with open('sellDict.pickle', 'wb') as handle:
+        pickle.dump(data, handle)
 def getSellValDict():
     with open('sellDict.pickle', 'rb') as handle:
         unserialized_data = pickle.load(handle)
